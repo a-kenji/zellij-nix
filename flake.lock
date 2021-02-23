@@ -162,7 +162,7 @@
     "zellij-checkout": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-OIMB1Zx7gKUddUb49yjnNOFJCBm/hngBipIHyusjEoc=",
+        "narHash": "sha256-z6+DSxC8n66IXFDpAuhu6Ww0xs2kMNTwgYhvMzBpBVA=",
         "path": "/home/kenji/git/zellij-nix/zellij",
         "type": "path"
       },
