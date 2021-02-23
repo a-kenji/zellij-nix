@@ -3,11 +3,11 @@
     "binaryen": {
       "flake": false,
       "locked": {
-        "lastModified": 1613500636,
-        "narHash": "sha256-sbZW6x9qR84R1mj4Kv3XL3Hf5gZXjSxm6HlwmBXlVBU=",
+        "lastModified": 1614041967,
+        "narHash": "sha256-5u3VcHpCOozIp03wbrEm8up0t41CQ6Tq6UcfSPg3CnI=",
         "owner": "WebAssembly",
         "repo": "binaryen",
-        "rev": "a74bc72dbe6fa5f3edacfba160dc4e5d630b99b6",
+        "rev": "b3b6a81c6a74db656d8f2c07b91c4a0ba4b28734",
         "type": "github"
       },
       "original": {
@@ -18,11 +18,11 @@
     },
     "devshell": {
       "locked": {
-        "lastModified": 1613310953,
-        "narHash": "sha256-GhAwxJ0Jfsj8LIQmEQylpVkcThUJgPChjo48DZeBQZA=",
+        "lastModified": 1613641255,
+        "narHash": "sha256-iSvjFK4WYAKhuXCCtkY7uy/cFQTzS3D3Ml5WZqjEfL0=",
         "owner": "numtide",
         "repo": "devshell",
-        "rev": "f64db97388dda7c2c6f8fb7aa5d6d08365fb1e01",
+        "rev": "ff6cffba08600f5b7b43f398fcb58bef023bc4c4",
         "type": "github"
       },
       "original": {
@@ -51,11 +51,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1612192764,
-        "narHash": "sha256-7EnLtZQWP6511G1ZPA7FmJlqAr3hWsAYb24tvTvJ/ec=",
+        "lastModified": 1613655351,
+        "narHash": "sha256-BLBnt3BYsh92qKgqZljckM9s5sZUt30cBQF5b/5pVCU=",
         "owner": "nmattia",
         "repo": "naersk",
-        "rev": "6e149bfd726a8ebefa415f2d713ba6d942435abd",
+        "rev": "1a9e5ddc51bc44c1bf872e02fe2702dc40e8af48",
         "type": "github"
       },
       "original": {
@@ -66,12 +66,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1613504097,
-        "narHash": "sha256-3oBIh8dCe08AfubwPbsCmt7H58cjG83OmGKutzT2iPI=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "052f58b7fa2593331eb45526b569429b3d08819e",
-        "type": "github"
+        "lastModified": 1613761605,
+        "narHash": "sha256-lUF6UPR96ZzQC0faNXBHLoLhNAdxZqYqDwz0PaIZ/7Y=",
+        "path": "/nix/store/pz44872rmpd7ygqfmdcwh4ac6hk1hy4s-source",
+        "rev": "9816b99e71c3504b0b4c1f8b2e004148460029d4",
+        "type": "path"
       },
       "original": {
         "id": "nixpkgs",
@@ -80,11 +79,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1613226215,
-        "narHash": "sha256-3rA5cGIrBHD6yeKhNhsF7/t461ww25oJY8KyBb0IhjU=",
+        "lastModified": 1614029319,
+        "narHash": "sha256-PXu4Vf05f3E2vpl7/Iop/O+gw655O3SONYVFxbl0kuc=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "ff96a0fa5635770390b184ae74debea75c3fd534",
+        "rev": "c7d0dbe094c988209edac801eb2a0cc21aa498d8",
         "type": "github"
       },
       "original": {
@@ -115,7 +114,8 @@
         "nixpkgs": "nixpkgs_2",
         "rust-overlay": "rust-overlay",
         "utils": "utils",
-        "zellij": "zellij"
+        "zellij": "zellij",
+        "zellij-checkout": "zellij-checkout"
       }
     },
     "rust-overlay": {
@@ -124,11 +124,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1613442370,
-        "narHash": "sha256-rHobFEX8c9Ucc13l5v0jaHkWfgfzAWd1lDgcgo81MOE=",
+        "lastModified": 1614047254,
+        "narHash": "sha256-7qVue6bthW3aIG6MXk96elwMlBUvFJLEo927wh1+57Y=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "a1c5f888864581295acc6f2fbd08c12190876c3d",
+        "rev": "0b96e000f742cab61e41954d3c24c562583a98b8",
         "type": "github"
       },
       "original": {
@@ -155,17 +155,29 @@
     "zellij": {
       "flake": false,
       "locked": {
-        "lastModified": 1613138122,
-        "narHash": "sha256-ZB9t6iSM3lOV41rwzHbW5XEQGBtLz6AGji6PAHvaSAY=",
+        "lastModified": 1613994192,
+        "narHash": "sha256-pMLG+g9h2lNfZbj2bh61r7FVsPktybyIFa88/OqfoC4=",
         "owner": "zellij-org",
         "repo": "zellij",
-        "rev": "c74e2ef27356257c45c6a7bdb24c51a7ae390d8f",
+        "rev": "4d21e8f357921bc7695a907405f73848789e3382",
         "type": "github"
       },
       "original": {
         "owner": "zellij-org",
         "repo": "zellij",
         "type": "github"
+      }
+    },
+    "zellij-checkout": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-CgMfHnI2/eGFAqOWG9Ynfa3iz0lbfqdkihxCqyBQaVc=",
+        "path": "/home/kenji/git/zellij-nix/zellij",
+        "type": "path"
+      },
+      "original": {
+        "path": "/home/kenji/git/zellij-nix/zellij",
+        "type": "path"
       }
     }
   },
