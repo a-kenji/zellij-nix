@@ -1,13 +1,14 @@
 {
-description = "Zellij Environment";
+description = "Zellij Nix Environment";
 
 inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     rust-overlay.url = "github:oxalica/rust-overlay";
     naersk.url = "github:nmattia/naersk";
-    devshell.url = "github:numtide/devshell";
+    naersk.inputs.nixpkgs.follows = "nixpkgs";
+    devshell.url = "github:numtide/devshell/master";
 
-    binaryen.url = "github:WebAssembly/binaryen";
+    binaryen.url = "github:WebAssembly/binaryen/main";
     binaryen.flake = false;
 
     utils.url = "github:numtide/flake-utils";
@@ -15,9 +16,12 @@ inputs = {
 
     zellij.url = "github:zellij-org/zellij";
     zellij.flake = false;
+
+    zellij-checkout.url = "/home/kenji/git/zellij-nix/zellij";
+    zellij-checkout.flake = false;
   };
 
-outputs = { self, nixpkgs, zellij, binaryen, devshell, rust-overlay, naersk, utils}:
+outputs = { self, nixpkgs, zellij, zellij-checkout, binaryen, devshell, rust-overlay, naersk, utils}:
        utils.lib.eachDefaultSystem (system: let
 
          binaryenUnstable = pkgs.stdenv.mkDerivation rec {
@@ -33,8 +37,27 @@ outputs = { self, nixpkgs, zellij, binaryen, devshell, rust-overlay, naersk, uti
         inherit system overlays;
       };
 
-      naersk-lib = naersk.lib."${system}";
+       # The root directory of this project
+      ZELLIJ_ROOT = toString ./.;
+      # Set up a local directory to install binaries in
+      CARGO_INSTALL_ROOT = "${ZELLIJ_ROOT}/.cargo";
+
+      rustToolchainToml = pkgs.rust-bin.fromRustupToolchainFile (zellij-checkout + /rust-toolchain);
+
+      naersk-lib = naersk.lib."${system}".override {
+        #error: the `-Z` flag is only accepted on the nightly channel of Cargo, but this is the `stable` channel
+        #cargo = rustToolchainToml;
+        #rustc = rustToolchainToml;
+        cargo = rustNaeskBuild;
+        rustc = rustNaeskBuild;
+      };
+
+      # needs to be a function from list to list
+      cargoOptions = opts: opts ++ [ "macro-backtrace" ];
+
+      # env
       RUST_BACKTRACE = 1;
+
       targets = [ "wasm32-wasi" ];
       extensions = [
         "rust-src"
@@ -43,17 +66,16 @@ outputs = { self, nixpkgs, zellij, binaryen, devshell, rust-overlay, naersk, uti
         "rust-analysis"
       ];
 
-  ruststable = pkgs.rust-bin.stable.latest.rust.override {
+  rustNaeskBuild = pkgs.rust-bin.nightly.latest.rust.override {
     inherit extensions targets;
   };
 
+
     buildInputs = [
-      ruststable
-      #pkgs.rustc
+      #ruststable
+      rustToolchainToml
       pkgs.cargo
       pkgs.rust-analyzer
-      #pkgs.binaryen
-      #pkgs.wasm-pack
       binaryenUnstable
     ];
 
@@ -63,6 +85,7 @@ outputs = { self, nixpkgs, zellij, binaryen, devshell, rust-overlay, naersk, uti
       packages.zellij = naersk-lib.buildPackage {
         pname = "zellij";
         root = zellij;
+        inherit cargoOptions;
       };
       defaultPackage = packages.zellij;
 
@@ -74,7 +97,7 @@ outputs = { self, nixpkgs, zellij, binaryen, devshell, rust-overlay, naersk, uti
 
       # `nix develop`
       devShell = pkgs.mkShell {
-        inherit  buildInputs RUST_BACKTRACE;
+        inherit  buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT;
       };
     });
 }
