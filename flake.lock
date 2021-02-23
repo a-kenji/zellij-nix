@@ -146,11 +146,11 @@
     "zellij": {
       "flake": false,
       "locked": {
-        "lastModified": 1614096821,
-        "narHash": "sha256-yZ7ZIky3mV5VyDl7hxNFYF/UICS+WAMM882UiXwhIf8=",
+        "lastModified": 1614100042,
+        "narHash": "sha256-DIVdh8rMaASgvyrLQahgfzODzcFaTxFtK51j4VMmLkk=",
         "owner": "zellij-org",
         "repo": "zellij",
-        "rev": "3bc9fdbc0c55f29a851073e348d6dcaa19234ab8",
+        "rev": "e46901a52faf8fe4fc30d11169459cc0cea4fa81",
         "type": "github"
       },
       "original": {
@@ -162,7 +162,7 @@
     "zellij-checkout": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-iwAr/RPpgN+XgCry1bhsFBVWujys2PWiHVXdWkZHFQg=",
+        "narHash": "sha256-asDY0bZWaTNoG2FfFXrGVa2nucoYAs5F2PG7X+5PGNk=",
         "path": "/home/kenji/git/zellij-nix/zellij",
         "type": "path"
       },
