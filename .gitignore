@@ -1,3 +1,4 @@
 zellij/
 zellij-upstream/
+target/
 .cargo/

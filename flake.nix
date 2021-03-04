@@ -52,8 +52,10 @@ outputs = { self, nixpkgs, zellij, zellij-checkout, binaryen, devshell, rust-ove
         rustc = rustNaeskBuild;
       };
 
+      RUSTFLAGS="-Z macro-backtrace";
+
       # needs to be a function from list to list
-      cargoOptions = opts: opts ++ [ "macro-backtrace" ];
+      cargoOptions = opts: opts ++ [ ];
 
       # env
       RUST_BACKTRACE = 1;
@@ -76,6 +78,7 @@ outputs = { self, nixpkgs, zellij, zellij-checkout, binaryen, devshell, rust-ove
       rustToolchainToml
       pkgs.cargo
       pkgs.rust-analyzer
+      pkgs.mkdocs
       binaryenUnstable
     ];
 
@@ -85,7 +88,7 @@ outputs = { self, nixpkgs, zellij, zellij-checkout, binaryen, devshell, rust-ove
       packages.zellij = naersk-lib.buildPackage {
         pname = "zellij";
         root = zellij;
-        inherit cargoOptions;
+        inherit cargoOptions  RUSTFLAGS;
       };
       defaultPackage = packages.zellij;
 
