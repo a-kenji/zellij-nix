@@ -26,7 +26,7 @@ outputs = { self, nixpkgs, zellij, zellij-checkout, binaryen, devshell, rust-ove
 
          binaryenUnstable = pkgs.stdenv.mkDerivation rec {
            pname = "binaryen";
-           version = "99";
+           version = "100";
            src = binaryen;
            nativeBuildInputs = with pkgs;[ cmake python3 ];
          };
@@ -48,8 +48,8 @@ outputs = { self, nixpkgs, zellij, zellij-checkout, binaryen, devshell, rust-ove
         #error: the `-Z` flag is only accepted on the nightly channel of Cargo, but this is the `stable` channel
         #cargo = rustToolchainToml;
         #rustc = rustToolchainToml;
-        cargo = rustNaeskBuild;
-        rustc = rustNaeskBuild;
+        cargo = rustNaerskBuild;
+        rustc = rustNaerskBuild;
       };
 
       RUSTFLAGS="-Z macro-backtrace";
@@ -68,13 +68,13 @@ outputs = { self, nixpkgs, zellij, zellij-checkout, binaryen, devshell, rust-ove
         "rust-analysis"
       ];
 
-  rustNaeskBuild = pkgs.rust-bin.nightly.latest.rust.override {
+  rustNaerskBuild = pkgs.rust-bin.nightly.latest.rust.override {
     inherit extensions targets;
   };
 
 
     buildInputs = [
-      #ruststable
+      #rustNaerskBuild
       rustToolchainToml
       pkgs.cargo
       pkgs.rust-analyzer
