@@ -17,7 +17,7 @@ inputs = {
     zellij.url = "github:zellij-org/zellij";
     zellij.flake = false;
 
-    zellij-checkout.url = "/home/kenji/git/zellij-nix/zellij";
+    zellij-checkout.url = "/home/kenji/projects/zellij-nix/zellij";
     zellij-checkout.flake = false;
   };
 
@@ -48,8 +48,8 @@ outputs = { self, nixpkgs, zellij, zellij-checkout, binaryen, devshell, rust-ove
         #error: the `-Z` flag is only accepted on the nightly channel of Cargo, but this is the `stable` channel
         #cargo = rustToolchainToml;
         #rustc = rustToolchainToml;
-        cargo = rustNaeskBuild;
-        rustc = rustNaeskBuild;
+        cargo = rustNaerskBuild;
+        rustc = rustNaerskBuild;
       };
 
       RUSTFLAGS="-Z macro-backtrace";
@@ -68,13 +68,13 @@ outputs = { self, nixpkgs, zellij, zellij-checkout, binaryen, devshell, rust-ove
         "rust-analysis"
       ];
 
-  rustNaeskBuild = pkgs.rust-bin.nightly.latest.rust.override {
+  rustNaerskBuild = pkgs.rust-bin.nightly.latest.rust.override {
     inherit extensions targets;
   };
 
 
     buildInputs = [
-      #ruststable
+      #rustNaerskBuild
       rustToolchainToml
       pkgs.cargo
       pkgs.rust-analyzer
