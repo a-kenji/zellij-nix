@@ -3,11 +3,11 @@
     "binaryen": {
       "flake": false,
       "locked": {
-        "lastModified": 1616686128,
-        "narHash": "sha256-Otgr55TbDNGvc4AI6S42L+DhOHPaRlWHhCorunpJAAA=",
+        "lastModified": 1616726239,
+        "narHash": "sha256-opstCIGg9Qvg+GMFPzgBN1NS61LMUYvSp1iijsTAHbw=",
         "owner": "WebAssembly",
         "repo": "binaryen",
-        "rev": "ae1a0a633cdffeec5354f8233c1321b832a96488",
+        "rev": "9c1d69f6596b76fe83bff17709b92f8cc2054a31",
         "type": "github"
       },
       "original": {
@@ -115,11 +115,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1616638346,
-        "narHash": "sha256-GovlUJkz6gwSkTu99nOJ8HApY3/9AoNXg2R1dYFrcZE=",
+        "lastModified": 1616811857,
+        "narHash": "sha256-agMk9dqdR4U/BJihw6qh60AZA3tz12Xm7Lprye6KycA=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "d414b80c0e6e96977b52b1a0a547ea7613a5c6d5",
+        "rev": "8c4647172cd36848b638e84ccad8b3a6e49d13fc",
         "type": "github"
       },
       "original": {
@@ -146,11 +146,11 @@
     "zellij": {
       "flake": false,
       "locked": {
-        "lastModified": 1616579930,
-        "narHash": "sha256-VYRkxsBEf1xd6wVHeXvo7rAaHBoAkiAg9LqG/Q5c15w=",
+        "lastModified": 1616764806,
+        "narHash": "sha256-fswiUHPj5VUbyyY9TypNI8iTIOTjFv+NvW+UUp9gcJQ=",
         "owner": "zellij-org",
         "repo": "zellij",
-        "rev": "e1e1f2104353ca021fe9b5261314ab6248c3b77c",
+        "rev": "d818661c727a59312e1a43432e84fbeec79fc145",
         "type": "github"
       },
       "original": {
@@ -162,12 +162,12 @@
     "zellij-checkout": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-m+UZqQHgMopD7ameCR05GQC//cGouuWiAQ6RlJxw4M4=",
-        "path": "/home/kenji/git/zellij-nix/zellij",
+        "narHash": "sha256-lv91Iybeb0FBmE1Wx3PJ1NC/hrAPAav6VJ5NRCBkbAo=",
+        "path": "/home/kenji/projects/zellij-nix/zellij",
         "type": "path"
       },
       "original": {
-        "path": "/home/kenji/git/zellij-nix/zellij",
+        "path": "/home/kenji/projects/zellij-nix/zellij",
         "type": "path"
       }
     }
