@@ -11,14 +11,7 @@
 
 utils.lib.eachDefaultSystem (system: let
 
-         binaryenUnstable = pkgs.stdenv.mkDerivation rec {
-           pname = "binaryen";
-           version = "100";
-           src = binaryen;
-           nativeBuildInputs = with pkgs;[ cmake python3 ];
-         };
-
-      #binaryenUnstable = pkgs.callPackage ./nix/binaryen.nix {};
+      binaryenUnstable = pkgs.callPackage ./nix/binaryen.nix {inherit binaryen;};
 
       overlays = [ (import rust-overlay) ];
 
