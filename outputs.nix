@@ -29,9 +29,9 @@ utils.lib.eachDefaultSystem (system: let
       naersk-lib = naersk.lib."${system}".override {
         #error: the `-Z` flag is only accepted on the nightly channel of Cargo, but this is the `stable` channel
         #cargo = rustToolchainToml;
-        #rustc = rustToolchainToml;
+        rustc = rustToolchainToml;
         cargo = rustNaerskBuild;
-        rustc = rustNaerskBuild;
+        #rustc = rustNaerskBuild;
       };
 
       RUSTFLAGS="-Z macro-backtrace";
@@ -39,13 +39,15 @@ utils.lib.eachDefaultSystem (system: let
       # needs to be a function from list to list
       cargoOptions = opts: opts ++ [ ];
 
+      cargoBuild = opts: ''bash ${zellij}/build-all.sh --release &&'' + opts;
+
       # env
       RUST_BACKTRACE = 1;
 
       targets = [ "wasm32-wasi" ];
       extensions = [
         "rust-src"
-        "rustfmt-preview"
+        #"rustfmt-preview"
         "clippy-preview"
         "rust-analysis"
       ];
@@ -69,7 +71,15 @@ utils.lib.eachDefaultSystem (system: let
       packages.zellij = naersk-lib.buildPackage {
         pname = "zellij";
         root = zellij;
-        inherit cargoOptions  RUSTFLAGS;
+        #buildPhase = ''
+        #bash ${zellij}/build-all.sh --release
+        #cargo build --release
+        #'';
+        inherit
+        cargoOptions
+        cargoBuild
+        #RUSTFLAGS
+        ;
       };
       defaultPackage = packages.zellij;
 
@@ -80,8 +90,9 @@ utils.lib.eachDefaultSystem (system: let
       defaultApp = apps.zellij;
 
       # `nix develop`
-      devShell = pkgs.mkShell {
-      name = "zellij-dev";
-      inherit  buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT;
-    };
+      #devShell = pkgs.mkShell {
+      #name = "zellij-dev";
+      #inherit  buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT;
+    #};
+    devShell = pkgs.callPackage ./shell.nix {inherit buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT;};
     })
