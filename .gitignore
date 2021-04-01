@@ -1,6 +1,7 @@
 zellij/
 zellij-upstream/
 target/
+result
 result/
 .cargo/
 .direnv/
