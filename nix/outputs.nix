@@ -6,10 +6,10 @@
 , devshell
 , rust-overlay
 , naersk
-, utils
+, flake-utils
 }:
 
-utils.lib.eachDefaultSystem (system: let
+flake-utils.lib.eachDefaultSystem (system: let
 
       binaryenUnstable = pkgs.callPackage ./nix/binaryen.nix {inherit binaryen;};
 
@@ -29,9 +29,9 @@ utils.lib.eachDefaultSystem (system: let
       naersk-lib = naersk.lib."${system}".override {
         #error: the `-Z` flag is only accepted on the nightly channel of Cargo, but this is the `stable` channel
         #cargo = rustToolchainToml;
-        rustc = rustToolchainToml;
+        #rustc = rustToolchainToml;
         cargo = rustNaerskBuild;
-        #rustc = rustNaerskBuild;
+        rustc = rustNaerskBuild;
       };
 
       RUSTFLAGS="-Z macro-backtrace";
@@ -39,7 +39,7 @@ utils.lib.eachDefaultSystem (system: let
       # needs to be a function from list to list
       cargoOptions = opts: opts ++ [ ];
 
-      cargoBuild = opts: ''bash ${zellij}/build-all.sh --release &&'' + opts;
+      #cargoBuild = opts: ''bash ${zellij}/build-all.sh --release &&'' + opts;
 
       # env
       RUST_BACKTRACE = 1;
@@ -57,9 +57,11 @@ utils.lib.eachDefaultSystem (system: let
   };
 
     buildInputs = [
-      #rustNaerskBuild
-      rustToolchainToml
+      rustNaerskBuild
+      #rustToolchainToml
+      #{ cargo = rustToolchainToml;}
       pkgs.cargo
+      pkgs.cargo-make
       pkgs.rust-analyzer
       pkgs.mkdocs
       binaryenUnstable
@@ -71,28 +73,19 @@ utils.lib.eachDefaultSystem (system: let
       packages.zellij = naersk-lib.buildPackage {
         pname = "zellij";
         root = zellij;
-        #buildPhase = ''
-        #bash ${zellij}/build-all.sh --release
-        #cargo build --release
-        #'';
         inherit
-        cargoOptions
-        cargoBuild
+        #cargoOptions
+        #cargoBuild
         #RUSTFLAGS
         ;
       };
       defaultPackage = packages.zellij;
 
       # `nix run`
-      apps.zellij = utils.lib.mkApp {
+      apps.zellij = flake-utils.lib.mkApp {
         drv = packages.zellij;
       };
       defaultApp = apps.zellij;
 
-      # `nix develop`
-      #devShell = pkgs.mkShell {
-      #name = "zellij-dev";
-      #inherit  buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT;
-    #};
-    devShell = pkgs.callPackage ./shell.nix {inherit buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT;};
+    devShell = pkgs.callPackage ./devShell.nix {inherit buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT;};
     })

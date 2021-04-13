@@ -11,8 +11,8 @@ inputs = {
     binaryen.url = "github:WebAssembly/binaryen/main";
     binaryen.flake = false;
 
-    utils.url = "github:numtide/flake-utils";
-    utils.inputs.nixpkgs.follows = "nixpkgs";
+    flake-utils.url = "github:numtide/flake-utils";
+    flake-utils.inputs.nixpkgs.follows = "nixpkgs";
 
     zellij.url = "github:zellij-org/zellij";
     zellij.flake = false;
