@@ -20,11 +20,6 @@ inputs = {
     zellij.url = "github:zellij-org/zellij";
     zellij.flake = false;
 
-    zellij-checkout.url = "/home/kenji/git/zellij-nix/zellij";
-    zellij-checkout.flake = false;
-
-    zellij-upstream.url = "/home/kenji/git/zellij-nix/zellij-upstream";
-    zellij-upstream.flake = false;
   };
 
   outputs = { ... } @ args: import ./nix args;

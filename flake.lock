@@ -124,9 +124,7 @@
         "nixpkgs": "nixpkgs",
         "rust-overlay": "rust-overlay",
         "utils": "utils",
-        "zellij": "zellij",
-        "zellij-checkout": "zellij-checkout",
-        "zellij-upstream": "zellij-upstream"
+        "zellij": "zellij"
       }
     },
     "rust-overlay": {
@@ -177,30 +175,6 @@
         "owner": "zellij-org",
         "repo": "zellij",
         "type": "github"
-      }
-    },
-    "zellij-checkout": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-Q+ISiGOG7AvQPICW7KWFFh73/MJqV0mp2HyH9nFz4zc=",
-        "path": "/home/kenji/git/zellij-nix/zellij",
-        "type": "path"
-      },
-      "original": {
-        "path": "/home/kenji/git/zellij-nix/zellij",
-        "type": "path"
-      }
-    },
-    "zellij-upstream": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-hfJ0ENr0NANPvw768q9rnaQUrkyns6mjPBsq6xL+M9A=",
-        "path": "/home/kenji/git/zellij-nix/zellij-upstream",
-        "type": "path"
-      },
-      "original": {
-        "path": "/home/kenji/git/zellij-nix/zellij-upstream",
-        "type": "path"
       }
     }
   },

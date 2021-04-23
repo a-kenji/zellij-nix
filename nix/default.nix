@@ -1,8 +1,6 @@
 { self
 , nixpkgs
 , zellij
-, zellij-checkout
-, zellij-upstream
 , flake-compat # only here so we don't support `...`
 , binaryen
 , devshell
