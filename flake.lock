@@ -125,7 +125,8 @@
         "rust-overlay": "rust-overlay",
         "utils": "utils",
         "zellij": "zellij",
-        "zellij-checkout": "zellij-checkout"
+        "zellij-checkout": "zellij-checkout",
+        "zellij-upstream": "zellij-upstream"
       }
     },
     "rust-overlay": {
@@ -187,6 +188,18 @@
       },
       "original": {
         "path": "/home/kenji/git/zellij-nix/zellij",
+        "type": "path"
+      }
+    },
+    "zellij-upstream": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-hfJ0ENr0NANPvw768q9rnaQUrkyns6mjPBsq6xL+M9A=",
+        "path": "/home/kenji/git/zellij-nix/zellij-upstream",
+        "type": "path"
+      },
+      "original": {
+        "path": "/home/kenji/git/zellij-nix/zellij-upstream",
         "type": "path"
       }
     }

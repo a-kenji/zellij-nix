@@ -8,8 +8,8 @@ inputs = {
     naersk.inputs.nixpkgs.follows = "nixpkgs";
     devshell.url = "github:numtide/devshell/master";
 
-   flake-compat.url = "github:edolstra/flake-compat";
-   flake-compat.flake = false;
+    flake-compat.url = "github:edolstra/flake-compat";
+    flake-compat.flake = false;
 
     binaryen.url = "github:WebAssembly/binaryen/main";
     binaryen.flake = false;
@@ -22,6 +22,9 @@ inputs = {
 
     zellij-checkout.url = "/home/kenji/git/zellij-nix/zellij";
     zellij-checkout.flake = false;
+
+    zellij-upstream.url = "/home/kenji/git/zellij-nix/zellij-upstream";
+    zellij-upstream.flake = false;
   };
 
   outputs = { ... } @ args: import ./nix args;

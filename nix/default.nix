@@ -2,6 +2,7 @@
 , nixpkgs
 , zellij
 , zellij-checkout
+, zellij-upstream
 , flake-compat # only here so we don't support `...`
 , binaryen
 , devshell
@@ -13,7 +14,7 @@
 
 utils.lib.eachDefaultSystem (system: let
 
-      binaryenUnstable = pkgs.callPackage ./nix/binaryen.nix {inherit binaryen;};
+      binaryenUnstable = pkgs.callPackage ./binaryen.nix {inherit binaryen;};
 
       overlays = [ (import rust-overlay) ];
 
@@ -73,10 +74,8 @@ utils.lib.eachDefaultSystem (system: let
         # `nix build`
       packages.zellij = naersk-lib.buildPackage {
         pname = "zellij";
-        root = zellij-checkout;
+        root = zellij;
         #buildPhase = ''
-        #bash ${zellij}/build-all.sh --release
-        #cargo build --release
         #'';
         inherit
         #cargoOptions
@@ -92,10 +91,5 @@ utils.lib.eachDefaultSystem (system: let
       };
       defaultApp = apps.zellij;
 
-      # `nix develop`
-      #devShell = pkgs.mkShell {
-      #name = "zellij-dev";
-      #inherit  buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT;
-    #};
-    devShell = pkgs.callPackage ./shell.nix {inherit buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT;};
+      devShell = pkgs.callPackage ./devShell.nix {inherit buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT;};
     })
