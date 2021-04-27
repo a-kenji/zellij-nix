@@ -1,33 +1,32 @@
 # Zellij Nix Environment
-supports 'direnv && lorri'
+supports `direnv && lorri`
 
 - dependencies:
-have 'nix' installed with flake support
+have `nix` installed with flake support
 
 - packages:
-builds 'binaryen' from source currently
+builds `binaryen` from source currently
 
 
 # usage:
 'git clone https://github.com/zellij-org/zellij' or a fork
 
 - devshell
-'nix develop'
+`nix develop`
 
 - integrate devshell with 'direnv'
-'cat .envrc' && read it
-'direnv allow'
+`cat .envrc` && read it `direnv allow`
 
 - run package
-'nix run'
+`nix run`
 
 - build package
-'nix build'
+`nix build`
 
 - update lockfile
-'nix flake update'
+`nix flake update`
 
 - update lockfile & commit
-'nix flake update --commit-lock-file'
+`nix flake update --commit-lock-file`
 
 
