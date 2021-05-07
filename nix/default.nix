@@ -5,7 +5,7 @@
 , binaryen
 , devshell
 , mozillapkgs
-, rust-overlay
+#, rust-overlay
 , naersk
 , flake-utils
 }:
@@ -32,7 +32,8 @@ flake-utils.lib.eachDefaultSystem (system: let
       CARGO_INSTALL_ROOT = "${ZELLIJ_ROOT}/.cargo";
 
       #rustToolchainToml = pkgs.rust-bin.fromRustupToolchainFile (zellij + /rust-toolchain);
-      rustToolchainToml = mozilla.rustChannelOf { rustToolchain = (zellij + ./rust-toolchain); }.rust;
+      #rustToolchainToml = (mozilla.rustChannelOf { rustToolchain = zellij + /rust-toolchain; }).rust;
+      rustToolchainToml = mozilla.rustChannels.beta.rust;
 
       naersk-lib = naersk.lib."${system}".override {
         #error: the `-Z` flag is only accepted on the nightly channel of Cargo, but this is the `stable` channel
@@ -72,10 +73,8 @@ flake-utils.lib.eachDefaultSystem (system: let
   #};
 
     buildInputs = [
-      rustNaerskBuild
-      #rustToolchainToml
-      #{ cargo = rustToolchainToml;}
-      pkgs.cargo
+      #rustNaerskBuild
+      rustToolchainToml
       pkgs.cargo-make
       pkgs.rust-analyzer
       pkgs.mkdocs

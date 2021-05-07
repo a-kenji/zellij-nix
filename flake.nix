@@ -3,7 +3,7 @@ description = "Zellij Nix Environment";
 
 inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    rust-overlay.url = "github:oxalica/rust-overlay";
+    #rust-overlay.url = "github:oxalica/rust-overlay";
     naersk.url = "github:nmattia/naersk";
     naersk.inputs.nixpkgs.follows = "nixpkgs";
     devshell.url = "github:numtide/devshell/master";
