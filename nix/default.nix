@@ -29,17 +29,10 @@ flake-utils.lib.eachDefaultSystem (system: let
 
       naersk-lib = naersk.lib."${system}".override {
         #error: the `-Z` flag is only accepted on the nightly channel of Cargo, but this is the `stable` channel
-<<<<<<< HEAD:nix/outputs.nix
-        #cargo = rustToolchainToml;
-        #rustc = rustToolchainToml;
-        cargo = rustNaerskBuild;
-        rustc = rustNaerskBuild;
-=======
-        cargo = rustToolchainToml;
-        rustc = rustToolchainToml;
         #cargo = rustNaerskBuild;
         #rustc = rustNaerskBuild;
->>>>>>> 4495d86f99eda385a2b4bfd437c5e06c92c5b0ad:nix/default.nix
+        cargo = rustToolchainToml;
+        rustc = rustToolchainToml;
       };
 
       RUSTFLAGS="-Z macro-backtrace";
@@ -81,16 +74,6 @@ flake-utils.lib.eachDefaultSystem (system: let
       packages.zellij = naersk-lib.buildPackage {
         pname = "zellij";
         root = zellij;
-<<<<<<< HEAD:nix/outputs.nix
-=======
-        #buildPhase = ''
-        #'';
->>>>>>> 4495d86f99eda385a2b4bfd437c5e06c92c5b0ad:nix/default.nix
-        inherit
-        #cargoOptions
-        #cargoBuild
-        #RUSTFLAGS
-        ;
       };
       defaultPackage = packages.zellij;
 
@@ -100,9 +83,5 @@ flake-utils.lib.eachDefaultSystem (system: let
       };
       defaultApp = apps.zellij;
 
-<<<<<<< HEAD:nix/outputs.nix
     devShell = pkgs.callPackage ./devShell.nix {inherit buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT;};
-=======
-      devShell = pkgs.callPackage ./devShell.nix {inherit buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT;};
->>>>>>> 4495d86f99eda385a2b4bfd437c5e06c92c5b0ad:nix/default.nix
     })
