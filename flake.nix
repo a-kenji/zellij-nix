@@ -8,6 +8,11 @@ inputs = {
     naersk.inputs.nixpkgs.follows = "nixpkgs";
     devshell.url = "github:numtide/devshell/master";
 
+    mozillapkgs = {
+      url = "github:mozilla/nixpkgs-mozilla";
+      flake = false;
+    };
+
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
 
@@ -19,7 +24,6 @@ inputs = {
 
     zellij.url = "github:zellij-org/zellij";
     zellij.flake = false;
-
   };
 
   outputs = { ... } @ args: import ./nix args;
