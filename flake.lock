@@ -3,11 +3,19 @@
     "binaryen": {
       "flake": false,
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1618277868,
         "narHash": "sha256-CGeS2m1EJ/iIoF4ouCQvevOYAga7lpz6vjl7d3R0K0w=",
         "owner": "WebAssembly",
         "repo": "binaryen",
         "rev": "b0af95200a37d76eccf285dcb45b4ed6162212d0",
+=======
+        "lastModified": 1619130134,
+        "narHash": "sha256-nZOyPj7RG8hrnNT7A1i/xb2dQxPYM6OEYRwmpcCpJ4k=",
+        "owner": "WebAssembly",
+        "repo": "binaryen",
+        "rev": "b0dd7fe1b82fa7e3696e06cac1daafd5eb54c221",
+>>>>>>> 4495d86f99eda385a2b4bfd437c5e06c92c5b0ad
         "type": "github"
       },
       "original": {
@@ -19,11 +27,19 @@
     },
     "devshell": {
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1618213758,
         "narHash": "sha256-qkuen2xlT7gVfX+99OeM4lsKXGjT5EDjytWAeAWX0Fw=",
         "owner": "numtide",
         "repo": "devshell",
         "rev": "eac56f015b0975be3b725721503626e926b285e8",
+=======
+        "lastModified": 1618523768,
+        "narHash": "sha256-Gev9da35pHUey3kGz/zrJFc/9ICs++vPCho7qB1mqd8=",
+        "owner": "numtide",
+        "repo": "devshell",
+        "rev": "709fe4d04a9101c9d224ad83f73416dce71baf21",
+>>>>>>> 4495d86f99eda385a2b4bfd437c5e06c92c5b0ad
         "type": "github"
       },
       "original": {
@@ -33,8 +49,25 @@
         "type": "github"
       }
     },
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1606424373,
+        "narHash": "sha256-oq8d4//CJOrVj+EcOaSXvMebvuTkmBJuT5tzlfewUnQ=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "99f1c2157fba4bfe6211a321fd0ee43199025dbf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1618217525,
         "narHash": "sha256-WGrhVczjXTiswQaoxQ+0PTfbLNeOQM6M36zvLn78AYg=",
         "owner": "numtide",
@@ -54,6 +87,12 @@
         "narHash": "sha256-LakhOx3S1dRjnh0b5Dg3mbZyH0ToC9I8Y2wKSkBaTzU=",
         "owner": "numtide",
         "repo": "flake-utils",
+=======
+        "lastModified": 1614513358,
+        "narHash": "sha256-LakhOx3S1dRjnh0b5Dg3mbZyH0ToC9I8Y2wKSkBaTzU=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+>>>>>>> 4495d86f99eda385a2b4bfd437c5e06c92c5b0ad
         "rev": "5466c5bbece17adaab2d82fae80b46e807611bf3",
         "type": "github"
       },
@@ -70,11 +109,19 @@
         ]
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1618068541,
         "narHash": "sha256-enxg0QB53Zis0VJWfJsrX7zCjurpi7lW78EKXbJdzpQ=",
         "owner": "nmattia",
         "repo": "naersk",
         "rev": "b3b099d669fc8b18d361c249091c9fe95d57ebbb",
+=======
+        "lastModified": 1618844365,
+        "narHash": "sha256-Z9t0rr+5OG/ru3jdg3jivfYVU4ydV/nqt8UwIut7uHs=",
+        "owner": "nmattia",
+        "repo": "naersk",
+        "rev": "32e3ba39d9d83098b13720a4384bdda191dd0445",
+>>>>>>> 4495d86f99eda385a2b4bfd437c5e06c92c5b0ad
         "type": "github"
       },
       "original": {
@@ -85,11 +132,19 @@
     },
     "nixpkgs": {
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1618251784,
         "narHash": "sha256-/IG7op2hUVnjzKt2UXL152+YsL0gdPakk6/RxondIJ0=",
         "owner": "nixos",
         "repo": "nixpkgs",
         "rev": "311ceed827f531f88f46222920cd1ebb2c101f73",
+=======
+        "lastModified": 1619057301,
+        "narHash": "sha256-1Y1nCnwGSQHM76KGIhz+8tOAGOT3wlP+dKjwoyQXCtg=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "d235056d6d6dcbd2999bd55fd120d831d4df6304",
+>>>>>>> 4495d86f99eda385a2b4bfd437c5e06c92c5b0ad
         "type": "github"
       },
       "original": {
@@ -118,12 +173,21 @@
       "inputs": {
         "binaryen": "binaryen",
         "devshell": "devshell",
+<<<<<<< HEAD
         "flake-utils": "flake-utils",
         "naersk": "naersk",
         "nixpkgs": "nixpkgs",
         "rust-overlay": "rust-overlay",
         "zellij": "zellij",
         "zellij-checkout": "zellij-checkout"
+=======
+        "flake-compat": "flake-compat",
+        "naersk": "naersk",
+        "nixpkgs": "nixpkgs",
+        "rust-overlay": "rust-overlay",
+        "utils": "utils",
+        "zellij": "zellij"
+>>>>>>> 4495d86f99eda385a2b4bfd437c5e06c92c5b0ad
       }
     },
     "rust-overlay": {
@@ -132,11 +196,19 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1618280690,
         "narHash": "sha256-X9lBD7FxUzmtJ+IE5U9vzQfAzko3fYv1Kn/P11Ju/mY=",
         "owner": "oxalica",
         "repo": "rust-overlay",
         "rev": "ac544844ae6b295c710d628dd2cb2e03be7d7bca",
+=======
+        "lastModified": 1619144889,
+        "narHash": "sha256-9+nfsUEb89TyNcK8F2pTia76GhPDYDigypCEGBRxAxo=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "49a8f52d0e15e8ccbd1946f3d7abff01931260a4",
+>>>>>>> 4495d86f99eda385a2b4bfd437c5e06c92c5b0ad
         "type": "github"
       },
       "original": {
@@ -145,6 +217,7 @@
         "type": "github"
       }
     },
+<<<<<<< HEAD
     "zellij": {
       "flake": false,
       "locked": {
@@ -153,6 +226,31 @@
         "owner": "zellij-org",
         "repo": "zellij",
         "rev": "ee70927611bbadee48402f1fe6d1b2930f72d68c",
+=======
+    "utils": {
+      "locked": {
+        "lastModified": 1618868421,
+        "narHash": "sha256-vyoJhLV6cJ8/tWz+l9HZLIkb9Rd9esE7p+0RL6zDR6Y=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "eed214942bcfb3a8cc09eb3b28ca7d7221e44a94",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "zellij": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1619171975,
+        "narHash": "sha256-3FkATIgTP/P7G5U2Lm2GP8vy8uxNrcAmTVNVm81cY7U=",
+        "owner": "zellij-org",
+        "repo": "zellij",
+        "rev": "20a6a8e844c6b0e1063e7d82d0107013e04e9e44",
+>>>>>>> 4495d86f99eda385a2b4bfd437c5e06c92c5b0ad
         "type": "github"
       },
       "original": {
@@ -160,6 +258,7 @@
         "repo": "zellij",
         "type": "github"
       }
+<<<<<<< HEAD
     },
     "zellij-checkout": {
       "flake": false,
@@ -172,6 +271,8 @@
         "path": "/home/kenji/projects/zellij-nix/zellij",
         "type": "path"
       }
+=======
+>>>>>>> 4495d86f99eda385a2b4bfd437c5e06c92c5b0ad
     }
   },
   "root": "root",
