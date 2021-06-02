@@ -22,8 +22,7 @@ inputs = {
     flake-utils.url = "github:numtide/flake-utils";
     flake-utils.inputs.nixpkgs.follows = "nixpkgs";
 
-    #zellij.url = "github:zellij-org/zellij";
-    zellij.url = "/home/kenji/git/zellij-nix/zellij";
+    zellij.url = "github:zellij-org/zellij";
     zellij.flake = false;
   };
 
