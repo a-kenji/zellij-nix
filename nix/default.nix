@@ -5,7 +5,7 @@
 , binaryen
 , devshell
 , mozillapkgs
-#, rust-overlay
+, rust-overlay
 , naersk
 , flake-utils
 }:
@@ -18,12 +18,10 @@ flake-utils.lib.eachDefaultSystem (system: let
 
       binaryenUnstable = pkgs.callPackage ./binaryen.nix {inherit binaryen;};
 
-      #overlays = [ (import rust-overlay) ];
+      overlays = [ (import rust-overlay) ];
 
       pkgs = import nixpkgs {
-        inherit system
-        #overlays
-        ;
+        inherit system overlays;
       };
 
        # The root directory of this project
@@ -31,15 +29,17 @@ flake-utils.lib.eachDefaultSystem (system: let
       # Set up a local directory to install binaries in
       CARGO_INSTALL_ROOT = "${ZELLIJ_ROOT}/.cargo";
 
-      #rustToolchainToml = pkgs.rust-bin.fromRustupToolchainFile (zellij + /rust-toolchain);
+      rustToolchainToml = pkgs.rust-bin.fromRustupToolchainFile (zellij + /rust-toolchain);
       #rustToolchainToml = (mozilla.rustChannelOf { rustToolchain = zellij + /rust-toolchain; }).rust;
-      rustToolchainToml = mozilla.rustChannels.beta.rust;
+      #rustToolchainToml = mozilla.rustChannels.beta.rust.override {
+    #inherit extensions targets;
+  #};
 
       naersk-lib = naersk.lib."${system}".override {
         #error: the `-Z` flag is only accepted on the nightly channel of Cargo, but this is the `stable` channel
-        #cargo = rustNaerskBuild;
+        cargo = rustNaerskBuild;
         #rustc = rustNaerskBuild;
-        cargo = rustToolchainToml;
+        #cargo = rustToolchainToml;
         rustc = rustToolchainToml;
       };
 
@@ -79,6 +79,7 @@ flake-utils.lib.eachDefaultSystem (system: let
       pkgs.rust-analyzer
       pkgs.mkdocs
       binaryenUnstable
+      #pkgs.binaryen
     ];
 
   in

@@ -7,7 +7,7 @@
 
 stdenv.mkDerivation rec {
 pname = "binaryen";
-version = "100";
+version = "101";
 src = binaryen;
 nativeBuildInputs = with pkgs;[ cmake python3 ];
 }
