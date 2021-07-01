@@ -26,6 +26,9 @@ builds `binaryen` from source currently
 - update lockfile
 `nix flake update`
 
+- update single dependency
+`nix flake lock --update-input zellij`
+
 - update lockfile & commit
 `nix flake update --commit-lock-file`
 

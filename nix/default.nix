@@ -79,12 +79,16 @@ flake-utils.lib.eachDefaultSystem (system: let
       pkgs.rust-analyzer
       pkgs.mkdocs
       binaryenUnstable
+
+      # in order to run tests
+      #pkgs.openssl
+      #pkgs.pkg-config
       #pkgs.binaryen
     ];
 
   in
     rec {
-        # `nix build`
+      # `nix build`
       packages.zellij = naersk-lib.buildPackage {
         pname = "zellij";
         root = zellij;
