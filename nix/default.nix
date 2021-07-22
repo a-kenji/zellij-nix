@@ -81,8 +81,8 @@ flake-utils.lib.eachDefaultSystem (system: let
       binaryenUnstable
 
       # in order to run tests
-      #pkgs.openssl
-      #pkgs.pkg-config
+      pkgs.openssl
+      pkgs.pkg-config
       #pkgs.binaryen
     ];
 
