@@ -6,7 +6,7 @@ inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05";
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
-    naersk.url = "github:nmattia/naersk";
+    naersk.url = "github:nix-community/naersk";
     naersk.inputs.nixpkgs.follows = "nixpkgs";
     devshell.url = "github:numtide/devshell/master";
 

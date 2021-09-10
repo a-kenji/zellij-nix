@@ -14,7 +14,7 @@
 flake-utils.lib.eachDefaultSystem (system: let
 
        # Get a specific rust version
-      mozilla = pkgs.callPackage (mozillapkgs + "/package-set.nix") {};
+      #mozilla = pkgs.callPackage (mozillapkgs + "/package-set.nix") {};
 
       binaryenUnstable = pkgs.callPackage ./binaryen.nix {inherit binaryen;};
 
@@ -37,9 +37,9 @@ flake-utils.lib.eachDefaultSystem (system: let
 
       naersk-lib = naersk.lib."${system}".override {
         #error: the `-Z` flag is only accepted on the nightly channel of Cargo, but this is the `stable` channel
-        cargo = rustNaerskBuild;
+        #cargo = rustNaerskBuild;
         #rustc = rustNaerskBuild;
-        #cargo = rustToolchainToml;
+        cargo = rustToolchainToml;
         rustc = rustToolchainToml;
       };
 
@@ -67,7 +67,7 @@ flake-utils.lib.eachDefaultSystem (system: let
   #};
 
   #mozilla
-  rustNaerskBuild = mozilla.latest.rustChannels.nightly.rust;
+  #rustNaerskBuild = mozilla.latest.rustChannels.nightly.rust;
   #.override {
     #inherit extensions targets;
   #};
