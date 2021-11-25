@@ -11,7 +11,7 @@ jobs:
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-    - name: Print nixpkgs version
-      run: nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
+    #- name: Print nixpkgs version
+      #run: nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
     - run: nix build
     - run: nix flake check
