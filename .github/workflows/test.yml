@@ -52,4 +52,4 @@ jobs:
       #run: nix develop
     # nix shell currently because of the output
     - name: "Nix shell"
-      run: nix-shell -p pkgs.treefmt pkgs.nixpkgs-fmt --command treefmt --fail-on-change
+      run: nix-shell -p pkgs.treefmt pkgs.nixpkgs-fmt --command "treefmt --fail-on-change"
