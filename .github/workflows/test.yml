@@ -48,10 +48,11 @@ jobs:
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+        nix_path: nixpkgs=channel:nixos-unstable
                   # Nix Flakes doesn't work on shallow clones
         fetch-depth: 0
     #- name: "Nix develop"
       #run: nix develop
     # nix shell currently because of the output
     - name: "Nix shell"
-      run: nix-shell -p pkgs.treefmt pkgs.nixpkgs-fmt --command "treefmt --fail-on-change"
+      run: nix-shell -p nixpkgs.treefmt nipkgs.nixpkgs-fmt --command "treefmt --fail-on-change"
