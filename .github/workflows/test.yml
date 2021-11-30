@@ -48,6 +48,8 @@ jobs:
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+                  # Nix Flakes doesn't work on shallow clones
+        fetch-depth: 0
     #- name: "Nix develop"
       #run: nix develop
     # nix shell currently because of the output
