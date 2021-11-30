@@ -3,7 +3,19 @@ on:
   pull_request:
   push:
 jobs:
-  tests:
+  nix-flake-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - uses: cachix/install-nix-action@v16
+      with:
+        extra_nix_config: |
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+    #- name: Print nixpkgs version
+      #run: nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
+    - name: "Nix flake check"
+      run: nix flake check
+  nix-build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.4.0
@@ -15,7 +27,16 @@ jobs:
       #run: nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
     - name: "Nix build"
       run: nix build
-    - name: "Nix develop"
-      run: nix develop
-    - name: "Nix flake check"
-      run: nix flake check
+  nix-develop:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - uses: cachix/install-nix-action@v16
+      with:
+        extra_nix_config: |
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+    #- name: "Nix develop"
+      #run: nix develop
+    # nix shell currently because of the output
+    - name: "Nix shell"
+      run: nix shell
