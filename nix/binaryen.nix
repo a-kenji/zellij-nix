@@ -1,4 +1,4 @@
-{stdenv
+{ stdenv
 , pkgs
 , binaryen
 , cmake
@@ -6,8 +6,8 @@
 }:
 
 stdenv.mkDerivation rec {
-pname = "binaryen";
-version = "101";
-src = binaryen;
-nativeBuildInputs = with pkgs;[ cmake python3 ];
+  pname = "binaryen";
+  version = "101";
+  src = binaryen;
+  nativeBuildInputs = with pkgs;[ cmake python3 ];
 }

@@ -1,7 +1,7 @@
 {
-description = "Zellij Nix Environment";
+  description = "Zellij Nix Environment";
 
-inputs = {
+  inputs = {
     #nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05";
     rust-overlay.url = "github:oxalica/rust-overlay";
