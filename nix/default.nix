@@ -84,6 +84,7 @@ flake-utils.lib.eachDefaultSystem (system: let
       pkgs.openssl
       pkgs.pkg-config
       #pkgs.binaryen
+
     ];
 
   in

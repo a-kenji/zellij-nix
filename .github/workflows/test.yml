@@ -39,4 +39,4 @@ jobs:
       #run: nix develop
     # nix shell currently because of the output
     - name: "Nix shell"
-      run: nix shell
+      run: nix-shell
