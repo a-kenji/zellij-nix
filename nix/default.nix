@@ -86,6 +86,9 @@ flake-utils.lib.eachDefaultSystem (system:
       pkgs.pkg-config
       #pkgs.binaryen
 
+      # formatting
+      pkgs.nixpkgs-fmt
+      pkgs.treefmt
     ];
 
   in
