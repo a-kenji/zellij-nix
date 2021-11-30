@@ -11,3 +11,6 @@ flake-ci-init:
     git checkout update_flake_lock_action
     git commit --amend --no-edit
     git push origin update_flake_lock_action --force
+
+update:
+    nix flake update --commit-lock-file
