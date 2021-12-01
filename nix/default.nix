@@ -79,12 +79,12 @@ flake-utils.lib.eachDefaultSystem (system:
       pkgs.cargo-make
       pkgs.rust-analyzer
       pkgs.mkdocs
-      binaryenUnstable
+      #binaryenUnstable
 
       # in order to run tests
       pkgs.openssl
       pkgs.pkg-config
-      #pkgs.binaryen
+      pkgs.binaryen
 
       # formatting
       pkgs.nixpkgs-fmt
