@@ -14,9 +14,6 @@
 flake-utils.lib.eachDefaultSystem (system:
   let
 
-    # Get a specific rust version
-    #mozilla = pkgs.callPackage (mozillapkgs + "/package-set.nix") {};
-
     binaryenUnstable = pkgs.callPackage ./binaryen.nix { inherit binaryen; };
 
     overlays = [ (import rust-overlay) ];
@@ -31,15 +28,8 @@ flake-utils.lib.eachDefaultSystem (system:
     CARGO_INSTALL_ROOT = "${ZELLIJ_ROOT}/.cargo";
 
     rustToolchainToml = pkgs.rust-bin.fromRustupToolchainFile (zellij + /rust-toolchain);
-    #rustToolchainToml = (mozilla.rustChannelOf { rustToolchain = zellij + /rust-toolchain; }).rust;
-    #rustToolchainToml = mozilla.rustChannels.beta.rust.override {
-    #inherit extensions targets;
-    #};
 
     naersk-lib = naersk.lib."${system}".override {
-      #error: the `-Z` flag is only accepted on the nightly channel of Cargo, but this is the `stable` channel
-      #cargo = rustNaerskBuild;
-      #rustc = rustNaerskBuild;
       cargo = rustToolchainToml;
       rustc = rustToolchainToml;
     };
@@ -48,8 +38,6 @@ flake-utils.lib.eachDefaultSystem (system:
 
     # needs to be a function from list to list
     cargoOptions = opts: opts ++ [ ];
-
-    #cargoBuild = opts: ''bash ${zellij}/build-all.sh --release &&'' + opts;
 
     # env
     RUST_BACKTRACE = 1;
@@ -61,17 +49,6 @@ flake-utils.lib.eachDefaultSystem (system:
       "clippy-preview"
       "rust-analysis"
     ];
-
-    #oxalica
-    #rustNaerskBuild = mozilla.rust-bin.nightly.latest.rust.override {
-    #inherit extensions targets;
-    #};
-
-    #mozilla
-    #rustNaerskBuild = mozilla.latest.rustChannels.nightly.rust;
-    #.override {
-    #inherit extensions targets;
-    #};
 
     buildInputs = [
       #rustNaerskBuild
