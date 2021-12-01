@@ -28,6 +28,7 @@ flake-utils.lib.eachDefaultSystem (system:
     CARGO_INSTALL_ROOT = "${ZELLIJ_ROOT}/.cargo";
 
     rustToolchainToml = pkgs.rust-bin.fromRustupToolchainFile (zellij + /rust-toolchain);
+    cargoLockFile = (zellij + /Cargo.lock);
 
     naersk-lib = naersk.lib."${system}".override {
       cargo = rustToolchainToml;
@@ -70,7 +71,7 @@ flake-utils.lib.eachDefaultSystem (system:
 
   in
   rec {
-    # `nix build`
+     #`nix build`
     packages.zellij = naersk-lib.buildPackage {
       pname = "zellij";
       root = zellij;
