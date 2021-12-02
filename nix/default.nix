@@ -71,7 +71,7 @@ flake-utils.lib.eachDefaultSystem (system:
 
   in
   rec {
-     #`nix build`
+    #`nix build`
     packages.zellij = naersk-lib.buildPackage {
       pname = "zellij";
       root = zellij;
