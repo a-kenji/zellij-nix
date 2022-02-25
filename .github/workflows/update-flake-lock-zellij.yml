@@ -16,6 +16,6 @@ jobs:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
       - name: Update flake.lock zellij input
-        uses: DeterminateSystems/update-flake-lock@v6
+        uses: DeterminateSystems/update-flake-lock@v8
         with:
           inputs: zellij
