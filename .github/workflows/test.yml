@@ -13,8 +13,8 @@ jobs:
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
     #- name: Print nixpkgs version
       #run: nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
-    - name: "Nix flake check"
-      run: nix flake check
+    #- name: "Nix flake check"
+      #run: nix flake check
   nix-build:
     runs-on: ubuntu-latest
     steps:
