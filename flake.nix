@@ -9,6 +9,7 @@
     naersk.url = "github:nix-community/naersk";
     naersk.inputs.nixpkgs.follows = "nixpkgs";
     devshell.url = "github:numtide/devshell/master";
+    dream2nix.url = "github:nix-community/dream2nix";
 
     mozillapkgs = {
       url = "github:mozilla/nixpkgs-mozilla";
