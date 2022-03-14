@@ -19,3 +19,8 @@ jobs:
         uses: DeterminateSystems/update-flake-lock@v8
         with:
           inputs: zellij
+        pr-labels: |
+          dependencies
+          automated
+          nix
+
