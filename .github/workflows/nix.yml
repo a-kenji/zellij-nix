@@ -1,9 +1,10 @@
-name: "Test"
+name: "nix"
 on:
   pull_request:
   push:
 jobs:
   flake-check:
+    name: "flake check"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -18,9 +19,10 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     #- name: Print nixpkgs version
       #run: nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
-    - name: "Nix flake check"
+    - name: "nix flake check"
       run: nix flake check
   build:
+    name: "build"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -35,9 +37,10 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     #- name: Print nixpkgs version
       #run: nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
-    - name: "Nix build"
+    - name: "nix build"
       run: nix build
   nix-develop:
+    name: "develop"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -50,12 +53,10 @@ jobs:
         name: zellij
         # If you chose API tokens for write access OR if you have a private cache
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - name: "Nix develop"
+    - name: "nix develop"
       run: nix develop
-    # nix shell currently because of the output
-    #- name: "Nix shell"
-      #run: nix-shell
-  nixpkgs-fmt:
+  format:
+    name: "treefmt"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -66,8 +67,5 @@ jobs:
         nix_path: nixpkgs=channel:nixos-unstable
                   # Nix Flakes doesn't work on shallow clones
         fetch-depth: 0
-    #- name: "Nix develop"
-      #run: nix develop
-    # nix shell currently because of the output
-    - name: "Nix shell"
+    - name: "nix shell treefmt"
       run: nix-shell -p pkgs.treefmt pkgs.nixpkgs-fmt --command "treefmt --fail-on-change"

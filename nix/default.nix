@@ -88,28 +88,28 @@ flake-utils.lib.eachDefaultSystem (system:
 
     devShell = pkgs.callPackage ./devShell.nix { inherit buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT; };
   })
-  #//
-        #(dream2nix.lib.init {
-        ## modify according to your supported systems
-        #systems = [ "x86_64-linux" ];
-        #config.projectRoot = zellij ;
-      #}).makeFlakeOutputs {
-    ##in dream2nix.makeFlakeOutputs {
-      #source = zellij;
-       ## configure package builds via overrides
-      #packageOverrides = {
-        ## name of the package
-        #name = "zellij";
-        #package-name = {
-          #name = "zellij-dream";
-          ## name the override
-          #add-pre-build-steps = {
-            ## override attributes
-            #preBuild = "...";
-            ## update attributes
-            ##buildInputs = old: old ++ [ ];
-          #};
-        #};
-      #};
-    #}
+#//
+#(dream2nix.lib.init {
+## modify according to your supported systems
+#systems = [ "x86_64-linux" ];
+#config.projectRoot = zellij ;
+#}).makeFlakeOutputs {
+##in dream2nix.makeFlakeOutputs {
+#source = zellij;
+## configure package builds via overrides
+#packageOverrides = {
+## name of the package
+#name = "zellij";
+#package-name = {
+#name = "zellij-dream";
+## name the override
+#add-pre-build-steps = {
+## override attributes
+#preBuild = "...";
+## update attributes
+##buildInputs = old: old ++ [ ];
+#};
+#};
+#};
+#}
 
