@@ -28,7 +28,7 @@ flake-utils.lib.eachDefaultSystem (system:
     # Set up a local directory to install binaries in
     CARGO_INSTALL_ROOT = "${ZELLIJ_ROOT}/.cargo";
 
-    rustToolchainToml = pkgs.rust-bin.fromRustupToolchainFile (zellij + /rust-toolchain);
+    rustToolchainToml = pkgs.rust-bin.fromRustupToolchainFile (zellij + /rust-toolchain.toml);
     cargoLockFile = (zellij + /Cargo.lock);
 
     naersk-lib = naersk.lib."${system}".override {
