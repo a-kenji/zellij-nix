@@ -5,7 +5,6 @@
 , rust-overlay
 , naersk
 , flake-utils
-, dream2nix
 , binaryen
 , flake-compat # only here so we don't support `...`
 }:
