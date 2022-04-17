@@ -3,24 +3,22 @@ on:
   pull_request:
   push:
 jobs:
-  flake-check:
-    name: "flake check"
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v17
-      with:
-        extra_nix_config: |
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-    - uses: cachix/cachix-action@v10
-      with:
-        name: zellij
-        # If you chose API tokens for write access OR if you have a private cache
-        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    #- name: Print nixpkgs version
-      #run: nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
-    - name: "nix flake check"
-      run: nix flake check
+  # flake-check:
+  #   name: "flake check"
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - uses: cachix/install-nix-action@v17
+  #     with:
+  #       extra_nix_config: |
+  #         access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+  #   - uses: cachix/cachix-action@v10
+  #     with:
+  #       name: zellij
+  #       # If you chose API tokens for write access OR if you have a private cache
+  #       authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+  #   - name: "nix flake check"
+  #     run: nix flake check
   build:
     name: "build"
     runs-on: ubuntu-latest
