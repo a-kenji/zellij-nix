@@ -7,6 +7,7 @@ on:
 jobs:
   lockfile:
     runs-on: ubuntu-latest
+    environment: update
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -18,6 +19,7 @@ jobs:
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v14
         with:
+          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
           pr-labels: |
             dependencies
             automated
