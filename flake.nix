@@ -16,7 +16,6 @@
     binaryen.flake = false;
 
     flake-utils.url = "github:numtide/flake-utils";
-    flake-utils.inputs.nixpkgs.follows = "nixpkgs";
 
     zellij.url = "github:zellij-org/zellij";
     zellij.flake = false;
