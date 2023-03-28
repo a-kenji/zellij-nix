@@ -1,22 +1,5 @@
 {
   "nodes": {
-    "binaryen": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1674239856,
-        "narHash": "sha256-OtjrOuaoGRbO0PLDHEMZlbDO4Rsp55ZD66C/uOgpYU4=",
-        "owner": "WebAssembly",
-        "repo": "binaryen",
-        "rev": "ed3bf4f0613a66496342720d82f4100eccf39403",
-        "type": "github"
-      },
-      "original": {
-        "owner": "WebAssembly",
-        "ref": "main",
-        "repo": "binaryen",
-        "type": "github"
-      }
-    },
     "devshell": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -152,7 +135,6 @@
     },
     "root": {
       "inputs": {
-        "binaryen": "binaryen",
         "devshell": "devshell",
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils_2",

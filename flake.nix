@@ -12,9 +12,6 @@
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
 
-    binaryen.url = "github:WebAssembly/binaryen/main";
-    binaryen.flake = false;
-
     flake-utils.url = "github:numtide/flake-utils";
 
     zellij.url = "github:zellij-org/zellij";
