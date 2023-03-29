@@ -1,15 +1,14 @@
 { self
 , nixpkgs
 , zellij
-, devshell
 , rust-overlay
-, naersk
 , flake-utils
 , flake-compat # only here so we don't support `...`
 }:
 # flake outputs
 
-flake-utils.lib.eachDefaultSystem (system:
+flake-utils.lib.eachDefaultSystem
+  (system:
   let
 
     overlays = [ (import rust-overlay) ];
@@ -24,31 +23,27 @@ flake-utils.lib.eachDefaultSystem (system:
     CARGO_INSTALL_ROOT = "${ZELLIJ_ROOT}/.cargo";
 
     rustToolchainToml = pkgs.rust-bin.fromRustupToolchainFile (zellij + /rust-toolchain.toml);
-    cargoLockFile = (zellij + /Cargo.lock);
+    rustc = rustToolchainToml;
+    cargo = rustToolchainToml;
 
-    naersk-lib = naersk.lib."${system}".override {
-      cargo = rustToolchainToml;
-      rustc = rustToolchainToml;
+    cargoLock = {
+      lockFile = builtins.path {
+        path = zellij + "/Cargo.lock";
+        name = "Cargo.lock";
+      };
+      allowBuiltinFetchGit = true;
     };
 
-    RUSTFLAGS = "-Z macro-backtrace";
+    nativeBuildInputs = [
+      pkgs.openssl
+      pkgs.pkg-config
+    ];
 
-    # needs to be a function from list to list
-    cargoOptions = opts: opts ++ [ ];
 
     # env
     RUST_BACKTRACE = 1;
 
-    targets = [ "wasm32-wasi" ];
-    extensions = [
-      "rust-src"
-      #"rustfmt-preview"
-      "clippy-preview"
-      "rust-analysis"
-    ];
-
     buildInputs = [
-      #rustNaerskBuild
       rustToolchainToml
       pkgs.cargo-make
       pkgs.rust-analyzer
@@ -68,10 +63,17 @@ flake-utils.lib.eachDefaultSystem (system:
   in
   rec {
     #`nix build`
-    packages.zellij = naersk-lib.buildPackage {
-      pname = "zellij";
-      root = zellij;
+    packages.zellij = (pkgs.makeRustPlatform
+      {
+        inherit cargo rustc;
+      }
+    ).buildRustPackage {
+      inherit buildInputs nativeBuildInputs cargoLock
+        ;
+      name = "zellij";
+      src = zellij;
     };
+
     defaultPackage = packages.zellij;
 
     # `nix run`
