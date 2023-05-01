@@ -1,86 +1,140 @@
-{ self
-, nixpkgs
-, zellij
-, rust-overlay
-, flake-utils
-, flake-compat # only here so we don't support `...`
+{
+  self,
+  nixpkgs,
+  zellij,
+  rust-overlay,
+  flake-utils,
+  flake-compat,
+  # only here so we don't support `...`
 }:
 # flake outputs
-
 flake-utils.lib.eachDefaultSystem
-  (system:
-  let
+(system: let
+  overlays = [(import rust-overlay)];
 
-    overlays = [ (import rust-overlay) ];
+  pkgs = import nixpkgs {
+    inherit system overlays;
+  };
 
-    pkgs = import nixpkgs {
-      inherit system overlays;
+  src = zellij;
+
+  stdenv =
+    if pkgs.stdenv.isLinux
+    then pkgs.stdenvAdapters.useMoldLinker pkgs.stdenv
+    else pkgs.stdenv;
+
+  rustToolchainTOML = pkgs.rust-bin.fromRustupToolchainFile (src + /rust-toolchain.toml);
+  rustWasmToolchainTOML = rustToolchainTOML.override {
+    extensions = [];
+    targets = ["wasm32-wasi"];
+  };
+  cargoTOML = builtins.fromTOML (builtins.readFile (src + "/Cargo.toml"));
+  inherit (cargoTOML.package) version name;
+
+  rustc = rustToolchainTOML;
+  cargo = rustToolchainTOML;
+
+  cargoLock = {
+    lockFile = builtins.path {
+      path = src + "/Cargo.lock";
+      name = "Cargo.lock";
     };
+    allowBuiltinFetchGit = true;
+  };
 
-    # The root directory of this project
-    ZELLIJ_ROOT = toString ./.;
-    # Set up a local directory to install binaries in
-    CARGO_INSTALL_ROOT = "${ZELLIJ_ROOT}/.cargo";
+  nativeBuildInputs = [
+    pkgs.openssl
+    pkgs.pkg-config
+  ];
 
-    rustToolchainToml = pkgs.rust-bin.fromRustupToolchainFile (zellij + /rust-toolchain.toml);
-    rustc = rustToolchainToml;
-    cargo = rustToolchainToml;
+  # env
+  RUST_BACKTRACE = 1;
 
-    cargoLock = {
-      lockFile = builtins.path {
-        path = zellij + "/Cargo.lock";
-        name = "Cargo.lock";
+  buildInputs = [
+    rustToolchainTOML
+    pkgs.mkdocs
+
+    pkgs.openssl
+    pkgs.binaryen
+
+    # formatting
+    pkgs.just
+    pkgs.nixpkgs-fmt
+    pkgs.treefmt
+  ];
+
+  defaultPlugins = pkgs.callPackage ./default-plugins.nix {
+    inherit cargoLock;
+    src = zellij;
+    rustc = rustWasmToolchainTOML;
+    cargo = rustWasmToolchainTOML;
+  };
+  patchPhase = ''
+    ${pkgs.tree}/bin/tree
+    cp ${defaultPlugins.tab-bar}/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
+    cp ${defaultPlugins.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
+    cp ${defaultPlugins.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
+    cp ${defaultPlugins.compact-bar}/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
+  '';
+in rec {
+  #`nix build`
+  packages = {
+    # The default build compiles the plugins from src
+    default =
+      (
+        pkgs.makeRustPlatform
+        {
+          inherit cargo rustc;
+        }
+      )
+      .buildRustPackage {
+        inherit
+          buildInputs
+          cargoLock
+          name
+          nativeBuildInputs
+          patchPhase
+          src
+          stdenv
+          version
+          ;
       };
-      allowBuiltinFetchGit = true;
-    };
+    # The upstream build relies on precompiled binary plugins that are included in the upstream src
+    zellij-upstream =
+      (
+        pkgs.makeRustPlatform
+        {
+          inherit cargo rustc;
+        }
+      )
+      .buildRustPackage {
+        inherit
+          buildInputs
+          cargoLock
+          name
+          nativeBuildInputs
+          src
+          stdenv
+          version
+          ;
+      };
+  };
+  plugins = {
+    inherit (defaultPlugins) tab-bar status-bar strider compact-bar;
+  };
 
-    nativeBuildInputs = [
-      pkgs.openssl
-      pkgs.pkg-config
-    ];
+  # `nix run`
+  apps.zellij = flake-utils.lib.mkApp {
+    drv = packages.zellij;
+  };
+  defaultApp = apps.zellij;
 
+  devShell = pkgs.callPackage ./devShell.nix {inherit buildInputs RUST_BACKTRACE;};
 
-    # env
-    RUST_BACKTRACE = 1;
+  formatter = pkgs.alejandra;
 
-    buildInputs = [
-      rustToolchainToml
-      pkgs.cargo-make
-      pkgs.rust-analyzer
-      pkgs.mkdocs
-
-      # in order to run tests
-      pkgs.openssl
-      pkgs.pkg-config
-      pkgs.binaryen
-
-      pkgs.just
-      # formatting
-      pkgs.nixpkgs-fmt
-      pkgs.treefmt
-    ];
-
-  in
-  rec {
-    #`nix build`
-    packages.zellij = (pkgs.makeRustPlatform
-      {
-        inherit cargo rustc;
-      }
-    ).buildRustPackage {
-      inherit buildInputs nativeBuildInputs cargoLock
-        ;
-      name = "zellij";
-      src = zellij;
-    };
-
-    defaultPackage = packages.zellij;
-
-    # `nix run`
-    apps.zellij = flake-utils.lib.mkApp {
-      drv = packages.zellij;
-    };
-    defaultApp = apps.zellij;
-
-    devShell = pkgs.callPackage ./devShell.nix { inherit buildInputs RUST_BACKTRACE CARGO_INSTALL_ROOT; };
-  })
+  checks = {
+    inherit (self.outputs.packages.${system}) default zellij-upstream;
+    inherit (self.outputs.plugins.${system}) tab-bar status-bar strider compact-bar;
+  };
+})
