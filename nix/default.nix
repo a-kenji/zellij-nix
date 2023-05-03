@@ -17,6 +17,12 @@ flake-utils.lib.eachDefaultSystem
       inherit system overlays;
     };
 
+    stdenv =
+      if pkgs.stdenv.isLinux
+      then pkgs.stdenvAdapters.useMoldLinker pkgs.stdenv
+      else pkgs.stdenv;
+
+
     # The root directory of this project
     ZELLIJ_ROOT = toString ./.;
     # Set up a local directory to install binaries in
@@ -68,7 +74,7 @@ flake-utils.lib.eachDefaultSystem
         inherit cargo rustc;
       }
     ).buildRustPackage {
-      inherit buildInputs nativeBuildInputs cargoLock
+      inherit buildInputs nativeBuildInputs cargoLock stdenv
         ;
       name = "zellij";
       src = zellij;
