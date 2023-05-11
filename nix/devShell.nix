@@ -1,7 +1,7 @@
-{
-  mkShell,
-  buildInputs,
-  RUST_BACKTRACE,
+{ mkShell
+, buildInputs
+, RUST_BACKTRACE
+,
 }:
 mkShell {
   name = "zellij-dev";

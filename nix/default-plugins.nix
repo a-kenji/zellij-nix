@@ -1,20 +1,21 @@
-{
-  cargo,
-  cargoLock,
-  pkgs,
-  rustc,
-  src,
-  stdenv,
-}: let
+{ cargo
+, cargoLock
+, pkgs
+, rustc
+, src
+, stdenv
+,
+}:
+let
   makeDefaultPlugin = name:
-    (pkgs.makeRustPlatform {inherit cargo rustc;}).buildRustPackage {
+    (pkgs.makeRustPlatform { inherit cargo rustc; }).buildRustPackage {
       inherit
         cargoLock
         name
         src
         stdenv
         ;
-      nativeBuildInputs = [pkgs.binaryen];
+      nativeBuildInputs = [ pkgs.binaryen ];
       buildPhase = ''
         cargo build --package ${name} --release --target=wasm32-wasi
         mkdir -p $out/bin;
@@ -25,7 +26,8 @@
       installPhase = ":";
       checkPhase = ":";
     };
-in {
+in
+{
   status-bar = makeDefaultPlugin "status-bar";
   tab-bar = makeDefaultPlugin "tab-bar";
   strider = makeDefaultPlugin "strider";
