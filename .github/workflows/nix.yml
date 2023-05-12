@@ -62,4 +62,4 @@ jobs:
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
     - name: "nix shell treefmt"
-      run: nix develop .#fmtShell --command "treefmt --fail-on-change"
+      run: nix develop .#fmtShell --command treefmt --fail-on-change
