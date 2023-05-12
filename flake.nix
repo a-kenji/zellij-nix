@@ -64,8 +64,6 @@
           pkgs.pkg-config
         ];
 
-        # env
-        RUST_BACKTRACE = 1;
 
         buildInputs = [
           rustToolchainTOML
@@ -137,14 +135,21 @@
           inherit (defaultPlugins) tab-bar status-bar strider compact-bar;
         };
 
-        apps.zellij = flake-utils.lib.mkApp {
-          drv = packages.zellij;
+        apps = {
+          default = flake-utils.lib.mkApp
+            {
+              drv = packages.default;
+            };
+          zellij-upstream = flake-utils.lib.mkApp
+            {
+              drv = packages.zellij-upstream;
+            };
         };
-        defaultApp = apps.zellij;
 
         devShell = pkgs.mkShell {
           name = "zellij-dev";
-          inherit buildInputs RUST_BACKTRACE;
+          inherit buildInputs nativeBuildInputs;
+          RUST_BACKTRACE = 1;
         };
 
         checks = {
