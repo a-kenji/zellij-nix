@@ -2,20 +2,12 @@
 supports `direnv && lorri`
 
 - dependencies:
-have `nix` installed with flake support
-
-- packages:
-builds `binaryen` from source currently
-
+have `nix` installed (with flake support)
 
 # usage:
-'git clone https://github.com/zellij-org/zellij' or a fork
 
 - devshell
 `nix develop`
-
-- integrate devshell with 'direnv'
-`cat .envrc` && read it `direnv allow`
 
 - run package
 `nix run`
@@ -23,13 +15,6 @@ builds `binaryen` from source currently
 - build package
 `nix build`
 
-- update lockfile
-`nix flake update`
-
-- update single dependency
-`nix flake lock --update-input zellij`
-
-- update lockfile & commit
-`nix flake update --commit-lock-file`
-
-
+The default outputs will build the plugins from source, making them patchable.
+For example `packages.x86_64-linux.default` and `plugins.x86_64-linux.compact-bar.
+`
