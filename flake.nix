@@ -60,17 +60,16 @@
         };
 
         nativeBuildInputs = [
-          pkgs.openssl
           pkgs.pkg-config
         ];
 
         buildInputs = [
           pkgs.openssl
-          pkgs.binaryen
         ];
 
         devInputs = [
           rustToolchainTOML
+          pkgs.binaryen
           pkgs.mkdocs
           pkgs.just
         ];
