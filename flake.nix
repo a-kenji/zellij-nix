@@ -22,8 +22,60 @@
     rust-overlay,
     flake-utils,
     ...
-  }:
-  # flake outputs
+  }: let
+    src = zellij;
+    cargoTOML = builtins.fromTOML (builtins.readFile (src + "/Cargo.toml"));
+    inherit (cargoTOML.package) version name;
+    cargoLock = {
+      lockFile = builtins.path {
+        path = src + "/Cargo.lock";
+        name = "Cargo.lock";
+      };
+      allowBuiltinFetchGit = true;
+    };
+    make-zellij = {
+      makeRustPlatform,
+      cargo,
+      rustc,
+      stdenv,
+      pkg-config,
+      openssl,
+      system,
+      patchPlugins ? true,
+    }:
+      (
+        makeRustPlatform
+        {
+          inherit cargo rustc;
+        }
+      )
+      .buildRustPackage {
+        inherit
+          cargoLock
+          name
+          src
+          stdenv
+          version
+          ;
+        nativeBuildInputs = [
+          pkg-config
+        ];
+
+        buildInputs = [
+          openssl
+        ];
+        patchPhase =
+          if patchPlugins
+          then ''
+            cp ${self.outputs.plugins.${system}.tab-bar}/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
+            cp ${self.outputs.plugins.${system}.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
+            cp ${self.outputs.plugins.${system}.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
+            cp ${self.outputs.plugins.${system}.compact-bar}/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
+          ''
+          else ":";
+      };
+  in
+    # flake outputs
     flake-utils.lib.eachDefaultSystem
     (
       system: let
@@ -32,8 +84,6 @@
         pkgs = import nixpkgs {
           inherit system overlays;
         };
-
-        src = zellij;
 
         stdenv =
           if pkgs.stdenv.isLinux
@@ -45,27 +95,9 @@
           extensions = [];
           targets = ["wasm32-wasi"];
         };
-        cargoTOML = builtins.fromTOML (builtins.readFile (src + "/Cargo.toml"));
-        inherit (cargoTOML.package) version name;
 
         rustc = rustToolchainTOML;
         cargo = rustToolchainTOML;
-
-        cargoLock = {
-          lockFile = builtins.path {
-            path = src + "/Cargo.lock";
-            name = "Cargo.lock";
-          };
-          allowBuiltinFetchGit = true;
-        };
-
-        nativeBuildInputs = [
-          pkgs.pkg-config
-        ];
-
-        buildInputs = [
-          pkgs.openssl
-        ];
 
         devInputs = [
           rustToolchainTOML
@@ -84,53 +116,13 @@
           rustc = rustWasmToolchainTOML;
           cargo = rustWasmToolchainTOML;
         };
-        patchPhase = ''
-          cp ${defaultPlugins.tab-bar}/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
-          cp ${defaultPlugins.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
-          cp ${defaultPlugins.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
-          cp ${defaultPlugins.compact-bar}/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
-        '';
       in rec {
-        packages = {
+        packages = rec {
           # The default build compiles the plugins from src
-          default =
-            (
-              pkgs.makeRustPlatform
-              {
-                inherit cargo rustc;
-              }
-            )
-            .buildRustPackage {
-              inherit
-                buildInputs
-                cargoLock
-                name
-                nativeBuildInputs
-                patchPhase
-                src
-                stdenv
-                version
-                ;
-            };
+          default = zellij;
+          zellij = pkgs.callPackage make-zellij {};
           # The upstream build relies on precompiled binary plugins that are included in the upstream src
-          zellij-upstream =
-            (
-              pkgs.makeRustPlatform
-              {
-                inherit cargo rustc;
-              }
-            )
-            .buildRustPackage {
-              inherit
-                buildInputs
-                cargoLock
-                name
-                nativeBuildInputs
-                src
-                stdenv
-                version
-                ;
-            };
+          zellij-upstream = pkgs.callPackage make-zellij {patchPlugins = false;};
         };
         plugins = {
           inherit (defaultPlugins) tab-bar status-bar strider compact-bar;
@@ -151,8 +143,10 @@
 
         devShells = {
           default = pkgs.mkShell {
-            inherit name buildInputs;
-            nativeBuildInputs = nativeBuildInputs ++ devInputs;
+            inherit name;
+            # buildInputs;
+            nativeBuildInputs = devInputs;
+            # nativeBuildInputs ++ devInputs;
             RUST_BACKTRACE = 1;
           };
           fmtShell = pkgs.mkShell {
@@ -169,13 +163,13 @@
     )
     // {
       overlays = {
-        default = _: prev: {
-          inherit (self.packages.${prev.system}) zellij;
-          inherit (self.packages.${prev.system}) zellij-upstream;
+        default = final: _: {
+          zellij = final.callPackage make-zellij {};
+          zellij-upstream = final.callPackage make-zellij {patchPlugins = false;};
         };
-        nightly = _: prev: {
-          zellij-nightly = self.packages.${prev.system}.zellij;
-          zellij-upstream-nightly = self.packages.${prev.system}.zellij-upstream;
+        nightly = final: _: {
+          zellij = final.callPackage make-zellij {};
+          zellij-upstream = final.callPackage make-zellij {patchPlugins = false;};
         };
       };
     };
