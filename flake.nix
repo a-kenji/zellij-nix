@@ -56,13 +56,12 @@
           stdenv
           version
           ;
-        nativeBuildInputs = [
-          pkg-config
-        ];
 
-        buildInputs = [
+        checkInputs = [
+          pkg-config
           openssl
         ];
+
         patchPhase =
           if patchPlugins
           then ''
