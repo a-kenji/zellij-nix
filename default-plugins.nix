@@ -5,6 +5,7 @@
   rustc,
   src,
   stdenv,
+  binaryen,
 }: let
   makeDefaultPlugin = name:
     (pkgs.makeRustPlatform {inherit cargo rustc;}).buildRustPackage {
@@ -14,7 +15,7 @@
         src
         stdenv
         ;
-      nativeBuildInputs = [pkgs.binaryen];
+      nativeBuildInputs = [binaryen];
       buildPhase = ''
         cargo build --package ${name} --release --target=wasm32-wasi
         mkdir -p $out/bin;

@@ -85,7 +85,6 @@
           cargo = rustWasmToolchainTOML;
         };
         patchPhase = ''
-          ${pkgs.tree}/bin/tree
           cp ${defaultPlugins.tab-bar}/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
           cp ${defaultPlugins.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
           cp ${defaultPlugins.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
