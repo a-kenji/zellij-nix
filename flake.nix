@@ -167,5 +167,17 @@
         };
         formatter = pkgs.alejandra;
       }
-    );
+    )
+    // {
+      overlays = {
+        default = _: prev: {
+          inherit (self.packages.${prev.system}) zellij;
+          inherit (self.packages.${prev.system}) zellij-upstream;
+        };
+        nightly = _: prev: {
+          inherit (self.packages.${prev.system}) zellij-nightly;
+          inherit (self.packages.${prev.system}) zellij-upstream-nightly;
+        };
+      };
+    };
 }
