@@ -175,8 +175,8 @@
           inherit (self.packages.${prev.system}) zellij-upstream;
         };
         nightly = _: prev: {
-          inherit (self.packages.${prev.system}) zellij-nightly;
-          inherit (self.packages.${prev.system}) zellij-upstream-nightly;
+          zellij-nightly = self.packages.${prev.system}.zellij;
+          zellij-upstream-nightly = self.packages.${prev.system}.zellij-upstream;
         };
       };
     };
