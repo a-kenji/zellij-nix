@@ -40,7 +40,6 @@
       stdenv,
       pkg-config,
       openssl,
-      system,
       patchPlugins ? true,
     }:
       (
@@ -67,10 +66,10 @@
         patchPhase =
           if patchPlugins
           then ''
-            cp ${self.outputs.plugins.${system}.tab-bar}/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
-            cp ${self.outputs.plugins.${system}.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
-            cp ${self.outputs.plugins.${system}.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
-            cp ${self.outputs.plugins.${system}.compact-bar}/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
+            cp ${self.outputs.plugins.x86_64-linux.tab-bar}/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
+            cp ${self.outputs.plugins.x86_64-linux.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
+            cp ${self.outputs.plugins.x86_64-linux.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
+            cp ${self.outputs.plugins.x86_64-linux.compact-bar}/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
           ''
           else ":";
       };
@@ -120,9 +119,12 @@
         packages = rec {
           # The default build compiles the plugins from src
           default = zellij;
-          zellij = pkgs.callPackage make-zellij {};
+          zellij = pkgs.callPackage make-zellij {inherit stdenv rustc cargo;};
           # The upstream build relies on precompiled binary plugins that are included in the upstream src
-          zellij-upstream = pkgs.callPackage make-zellij {patchPlugins = false;};
+          zellij-upstream = pkgs.callPackage make-zellij {
+            inherit stdenv rustc cargo;
+            patchPlugins = false;
+          };
         };
         plugins = {
           inherit (defaultPlugins) tab-bar status-bar strider compact-bar;
@@ -168,8 +170,8 @@
           zellij-upstream = final.callPackage make-zellij {patchPlugins = false;};
         };
         nightly = final: _: {
-          zellij = final.callPackage make-zellij {};
-          zellij-upstream = final.callPackage make-zellij {patchPlugins = false;};
+          zellij-nightly = final.callPackage make-zellij {};
+          zellij-upstream-nightly = final.callPackage make-zellij {patchPlugins = false;};
         };
       };
     };
