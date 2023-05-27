@@ -166,6 +166,11 @@
           inherit (self.outputs.plugins.${system}) tab-bar status-bar strider compact-bar;
         };
         formatter = pkgs.alejandra;
+        legacyPackages = import nixpkgs {
+          inherit system;
+          overlays = [self.overlays.cross];
+          crossOverlays = [self.overlays.cross];
+        };
       }
     )
     // {
@@ -177,6 +182,10 @@
         nightly = _: prev: {
           inherit (self.packages.${prev.system}) zellij-nightly;
           inherit (self.packages.${prev.system}) zellij-upstream-nightly;
+        };
+        cross = _: _: {
+          zellij-cross = self.packages."x86_64-linux".default;
+          zellij-upstream-cross = self.packages."x86_64-linux".zellij-upstream;
         };
       };
     };
