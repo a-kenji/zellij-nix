@@ -1,7 +1,10 @@
 name: "nix"
 on:
   pull_request:
+    branches: [ main ]
   push:
+    branches: [ main ]
+
 jobs:
   check:
     name: "check"
@@ -63,3 +66,15 @@ jobs:
         fetch-depth: 0
     - name: "nix shell treefmt"
       run: nix develop .#fmtShell --command treefmt --fail-on-change
+  actionlint:
+    name: "actionlint"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v20
+      with:
+        extra_nix_config: |
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+    - name: "nix shell actionlint"
+      run: nix develop .#actionlintShell --command actionlint

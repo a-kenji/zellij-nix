@@ -154,6 +154,9 @@
           fmtShell = pkgs.mkShell {
             buildInputs = fmtInputs;
           };
+          actionlintShell = pkgs.mkShell {
+            buildInputs = [pkgs.actionlint];
+          };
         };
 
         checks = {
