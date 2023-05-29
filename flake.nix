@@ -35,18 +35,25 @@
     };
     make-zellij = {
       makeRustPlatform,
+      rustPlatform,
       cargo,
       rustc,
       stdenv,
       pkg-config,
       openssl,
       patchPlugins ? true,
+      is_cross ? false,
     }:
       (
-        makeRustPlatform
-        {
-          inherit cargo rustc;
-        }
+        if is_cross
+        then rustPlatform
+        else
+          (
+            makeRustPlatform
+            {
+              inherit cargo rustc;
+            }
+          )
       )
       .buildRustPackage {
         inherit
@@ -125,6 +132,17 @@
             inherit stdenv rustc cargo;
             patchPlugins = false;
           };
+          # The cross build doesn't use an overlay to always pull in the exact version of rust
+          # that upstream is using
+          zellij-cross = pkgs.callPackage make-zellij {
+            inherit stdenv rustc cargo;
+            is_cross = true;
+          };
+          zellij-cross-upstream = pkgs.callPackage make-zellij {
+            inherit stdenv rustc cargo;
+            is_cross = false;
+            patchPlugins = false;
+          };
         };
         plugins = {
           inherit (defaultPlugins) tab-bar status-bar strider compact-bar;
@@ -140,6 +158,16 @@
             flake-utils.lib.mkApp
             {
               drv = packages.zellij-upstream;
+            };
+          zellij-cross-upstream =
+            flake-utils.lib.mkApp
+            {
+              drv = packages.zellij-cross-upstream;
+            };
+          zellij-cross =
+            flake-utils.lib.mkApp
+            {
+              drv = packages.zellij-cross;
             };
         };
 
@@ -160,7 +188,7 @@
         };
 
         checks = {
-          inherit (self.outputs.packages.${system}) default zellij-upstream;
+          inherit (self.outputs.packages.${system}) default zellij-upstream zellij-cross zellij-cross-upstream;
           inherit (self.outputs.plugins.${system}) tab-bar status-bar strider compact-bar;
         };
         formatter = pkgs.alejandra;
@@ -171,10 +199,24 @@
         default = final: _: {
           zellij = final.callPackage make-zellij {};
           zellij-upstream = final.callPackage make-zellij {patchPlugins = false;};
+          zellij-cross = final.callPackage make-zellij {
+            is_cross = true;
+          };
+          zellij-cross-upstream = final.callPackage make-zellij {
+            is_cross = false;
+            patchPlugins = false;
+          };
         };
         nightly = final: _: {
           zellij-nightly = final.callPackage make-zellij {};
           zellij-upstream-nightly = final.callPackage make-zellij {patchPlugins = false;};
+          zellij-cross = final.callPackage make-zellij {
+            is_cross = true;
+          };
+          zellij-cross-upstream = final.callPackage make-zellij {
+            is_cross = false;
+            patchPlugins = false;
+          };
         };
       };
     };
