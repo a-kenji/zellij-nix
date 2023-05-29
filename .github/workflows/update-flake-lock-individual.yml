@@ -1,0 +1,72 @@
+name: update-flake-lock-individual
+# This workflow is intended for individual updates of the inputs,
+# in case the update-flake-lock action fails.
+on:
+  workflow_dispatch: # allows manual triggering
+  schedule:
+    - cron: '0 7 * * SUN' # runs weekly on sunday at 07:00
+
+jobs:
+  input-lockfile-flake-utils:
+    runs-on: ubuntu-latest
+    environment: "update"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v20
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: Update flake.lock
+        uses: DeterminateSystems/update-flake-lock@v19
+        with:
+            token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+            pr-labels: |
+              dependencies
+              nix
+            inputs: flake-utils
+            branch: update_input_action_flake_utils
+            pr-title: "flake.lock: update flake-utils"
+  input-lockfile-nixpkgs:
+    runs-on: ubuntu-latest
+    environment: "update"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v20
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: Update flake.lock
+        uses: DeterminateSystems/update-flake-lock@v19
+        with:
+            token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+            pr-labels: |
+              dependencies
+              nix
+            inputs: nixpkgs
+            branch: update_input_action_nixpkgs
+            pr-title: "flake.lock: update nixpkgs"
+  input-lockfile-rust-overlay:
+    runs-on: ubuntu-latest
+    environment: "update"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v20
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: Update flake.lock
+        uses: DeterminateSystems/update-flake-lock@v19
+        with:
+            token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+            pr-labels: |
+              dependencies
+              nix
+            inputs: rust-overlay
+            branch: update_input_action_rust_overlay
+            pr-title: "flake.lock: update rust-overlay"
