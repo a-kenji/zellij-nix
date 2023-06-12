@@ -34,8 +34,8 @@ jobs:
           cp -Rp ./result ./vendor
           sudo chmod a+w ./vendor/Cargo.lock
           cd ./vendor
-          nix develop --command cargo update
-          git add $GITHUB_REPOSITORY/vendor/Cargo.lock
+          nix develop --command cargo update --manifest-path ./vendor/Cargo.toml
+          git add ./vendor/Cargo.lock
           git commit -m "$(date)"
         shell: bash
 
