@@ -12,10 +12,10 @@ pull_request_rules:
         - author=github-actions[bot]
       - or:
         - "title=flake.lock: Update"
-        - "title=flake.lock: update neovim-nightly-overlay"
+        - "title=flake.lock: update zellij"
+        - "title=flake.lock: update rust-overlay"
         - "title=flake.lock: update flake-utils"
         - "title=flake.lock: update nixpkgs"
-        - "title=flake.lock: update home-manager"
     actions:
       merge:
         method: merge
