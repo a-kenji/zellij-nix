@@ -1,0 +1,22 @@
+pull_request_rules:
+  - name: automatic merge on CI success
+    conditions:
+      - check-success= nix flake check
+      - check-success= nix build
+      - check-success= nix develop
+      - check-success= treefmt
+      - check-success= actionlint
+      - or:
+        - author=a-kenji
+        - author=a-kenji-buildbot
+        - author=github-actions[bot]
+      - or:
+        - "title=flake.lock: Update"
+        - "title=flake.lock: update neovim-nightly-overlay"
+        - "title=flake.lock: update flake-utils"
+        - "title=flake.lock: update nixpkgs"
+        - "title=flake.lock: update home-manager"
+    actions:
+      merge:
+        method: merge
+      delete_head_branch: {}
