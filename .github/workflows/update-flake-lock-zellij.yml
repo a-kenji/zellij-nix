@@ -25,4 +25,16 @@ jobs:
             dependencies
             automated
             nix
+      - name: setup git
+        run: |
+          set -xe
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          SRC=$(nix eval .#zellij.src.outPath)
+          cp -r "$SRC" $GITHUB_REPOSITORY/vendor
+          cd $GITHUB_REPOSITORY/vendor
+          nix develop --command cargo update
+          git add $GITHUB_REPOSITORY/vendor/Cargo.lock
+          git commit -m "$(date)"
+        shell: bash
 
