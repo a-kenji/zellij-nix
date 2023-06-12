@@ -32,7 +32,7 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           nix build .#zellij.src.outPath
           cp -Rp ./result ./vendor
-          run chmod a+w ./vendor/Cargo.lock
+          sudo chmod a+w ./vendor/Cargo.lock
           cd $GITHUB_REPOSITORY/vendor
           nix develop --command cargo update
           git add $GITHUB_REPOSITORY/vendor/Cargo.lock
