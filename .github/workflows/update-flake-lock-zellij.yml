@@ -33,7 +33,7 @@ jobs:
           nix build .#zellij.src.outPath
           cp -Rp ./result ./vendor
           sudo chmod a+w ./vendor/Cargo.lock
-          cd $GITHUB_REPOSITORY/vendor
+          cd ./vendor
           nix develop --command cargo update
           git add $GITHUB_REPOSITORY/vendor/Cargo.lock
           git commit -m "$(date)"
