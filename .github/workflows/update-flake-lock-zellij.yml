@@ -30,8 +30,9 @@ jobs:
           set -xe
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          SRC=$(nix build .#zellij.src.outPath)
-          cp -r "$SRC" $GITHUB_REPOSITORY/vendor
+          nix build .#zellij.src.outPath
+          cp -R ./result ./vendor
+          chmod -R +w ./vendor
           cd $GITHUB_REPOSITORY/vendor
           nix develop --command cargo update
           git add $GITHUB_REPOSITORY/vendor/Cargo.lock
