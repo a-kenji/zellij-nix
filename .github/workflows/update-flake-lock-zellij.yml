@@ -31,9 +31,8 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           nix build .#zellij.src.outPath
-          cp -Rp ./result ./vendor
-          sudo rm ./vendor/Cargo.lock
-          sudo chmod a+w ./vendor/
+          cp -r -L ./result ./vendor
+          sudo chmod -R a+w ./vendor/
           nix develop --command cargo update --manifest-path ./vendor/Cargo.toml
           git add ./vendor/Cargo.lock
           git commit -m "$(date)"
