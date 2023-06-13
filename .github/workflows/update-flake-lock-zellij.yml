@@ -36,5 +36,6 @@ jobs:
           nix develop --command cargo update --manifest-path ./vendor/Cargo.toml
           git add ./vendor/Cargo.lock
           git commit -m "$(date)"
+          git push
         shell: bash
 
