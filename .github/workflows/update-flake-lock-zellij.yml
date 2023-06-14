@@ -21,6 +21,8 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
           inputs: zellij
+          branch: update_input_action_zellij
+          pr-title: "flake.lock: update zellij"
           pr-labels: |
             dependencies
             automated
