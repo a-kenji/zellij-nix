@@ -30,17 +30,17 @@ jobs:
             dependencies
             automated
             nix
-      - name: setup git
-        run: |
-          set -xe
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      # - name: setup git
+      #   run: |
+      #     set -xe
+      #     git config user.name github-actions[bot]
+      #     git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           # nix build .#zellij.src.outPath
           # cp -r -L ./result ./vendor
           # sudo chmod -R a+w ./vendor/
           # nix develop --command cargo update --manifest-path ./vendor/Cargo.toml
           # git add ./vendor/Cargo.lock
           # git commit -m "$(date)"
-          git push
-        shell: bash
+          # git push
+        # shell: bash
 
