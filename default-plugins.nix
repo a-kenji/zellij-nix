@@ -6,6 +6,7 @@
   src,
   stdenv,
   binaryen,
+  optimize ? true,
 }: let
   makeDefaultPlugin = name:
     (pkgs.makeRustPlatform {inherit cargo rustc;}).buildRustPackage {
@@ -19,12 +20,21 @@
       buildPhase = ''
         cargo build --package ${name} --release --target=wasm32-wasi
         mkdir -p $out/bin;
-        wasm-opt \
-        -O target/wasm32-wasi/release/${name}.wasm \
-        -o $out/bin/${name}.wasm
       '';
-      installPhase = ":";
-      checkPhase = ":";
+      installPhase =
+        if optimize
+        then ''
+          wasm-opt \
+          -Oz target/wasm32-wasi/release/${name}.wasm \
+          -o $out/bin/${name}.wasm \
+          --enable-bulk-memory
+        ''
+        else ''
+          mv \
+          target/wasm32-wasi/release/${name}.wasm \
+          $out/bin/${name}.wasm
+        '';
+      doCheck = false;
     };
 in {
   status-bar = makeDefaultPlugin "status-bar";
