@@ -2,6 +2,7 @@
   cargo,
   cargoLock,
   pkgs,
+  protobuf,
   rustc,
   src,
   stdenv,
@@ -16,7 +17,7 @@
         src
         stdenv
         ;
-      nativeBuildInputs = [binaryen];
+      nativeBuildInputs = [binaryen protobuf];
       buildPhase = ''
         cargo build --package ${name} --release --target=wasm32-wasi
         mkdir -p $out/bin;
