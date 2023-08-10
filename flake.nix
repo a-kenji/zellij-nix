@@ -40,6 +40,7 @@
       rustc,
       stdenv,
       pkg-config,
+      protobuf,
       openssl,
       patchPlugins ? true,
       is_cross ? false,
@@ -65,10 +66,12 @@
           ;
         nativeBuildInputs = [
           pkg-config
+          protobuf
         ];
 
         buildInputs = [
           openssl
+          protobuf
         ];
         patchPhase =
           if patchPlugins
@@ -110,6 +113,7 @@
           pkgs.binaryen
           pkgs.mkdocs
           pkgs.just
+          pkgs.protobuf
         ];
 
         fmtInputs = [
