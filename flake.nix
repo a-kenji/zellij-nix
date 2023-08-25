@@ -80,6 +80,7 @@
             cp ${self.outputs.plugins.x86_64-linux.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
             cp ${self.outputs.plugins.x86_64-linux.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
             cp ${self.outputs.plugins.x86_64-linux.compact-bar}/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
+            cp ${self.outputs.plugins.x86_64-linux.session-manager}/bin/session-manager.wasm zellij-utils/assets/plugins/session-manager.wasm
           ''
           else ":";
       };
@@ -149,7 +150,7 @@
           };
         };
         plugins = {
-          inherit (defaultPlugins) tab-bar status-bar strider compact-bar;
+          inherit (defaultPlugins) tab-bar status-bar strider compact-bar session-manager;
         };
 
         apps = {
@@ -193,7 +194,7 @@
 
         checks = {
           inherit (self.outputs.packages.${system}) default zellij-upstream zellij-cross zellij-cross-upstream;
-          inherit (self.outputs.plugins.${system}) tab-bar status-bar strider compact-bar;
+          inherit (self.outputs.plugins.${system}) tab-bar status-bar strider compact-bar session-manager;
         };
         formatter = pkgs.alejandra;
       }
