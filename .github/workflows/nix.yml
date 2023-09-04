@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v22
+    - uses: cachix/install-nix-action@v23
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -33,7 +33,7 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@v2
       with:
         diagnostic-endpoint: ""
-    - uses: cachix/install-nix-action@v22
+    - uses: cachix/install-nix-action@v23
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -52,7 +52,7 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@v2
       with:
         diagnostic-endpoint: ""
-    - uses: cachix/install-nix-action@v22
+    - uses: cachix/install-nix-action@v23
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -71,7 +71,7 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@v2
       with:
         diagnostic-endpoint: ""
-    - uses: cachix/install-nix-action@v22
+    - uses: cachix/install-nix-action@v23
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -86,7 +86,7 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@v2
       with:
         diagnostic-endpoint: ""
-    - uses: cachix/install-nix-action@v22
+    - uses: cachix/install-nix-action@v23
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
