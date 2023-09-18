@@ -131,11 +131,11 @@
     "zellij": {
       "flake": false,
       "locked": {
-        "lastModified": 1694844997,
-        "narHash": "sha256-au/KtwLt9VuakjjbvQinudJaSB7ta3fv1sbh5ypzLQA=",
+        "lastModified": 1695047343,
+        "narHash": "sha256-OIZ/OJcvw8chlWbynrzJkrFaz6Ak7F/pluJKQiTs/sQ=",
         "owner": "zellij-org",
         "repo": "zellij",
-        "rev": "74a3b6363594d53f78c16a05444814d68e3fd76f",
+        "rev": "e8b14f18aba3fc5444d464754b487424a81fe2cd",
         "type": "github"
       },
       "original": {
