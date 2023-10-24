@@ -48,15 +48,10 @@
       (
         if is_cross
         then rustPlatform
-        else
-          (
-            makeRustPlatform
-            {
-              inherit cargo rustc;
-            }
-          )
+        else (makeRustPlatform {inherit cargo rustc;})
       )
-      .buildRustPackage {
+      .buildRustPackage
+      {
         inherit
           cargoLock
           name
@@ -86,21 +81,20 @@
       };
   in
     # flake outputs
-    flake-utils.lib.eachDefaultSystem
-    (
+    flake-utils.lib.eachDefaultSystem (
       system: let
         overlays = [(import rust-overlay)];
 
-        pkgs = import nixpkgs {
-          inherit system overlays;
-        };
+        pkgs = import nixpkgs {inherit system overlays;};
 
         stdenv =
           if pkgs.stdenv.isLinux
           then pkgs.stdenvAdapters.useMoldLinker pkgs.stdenv
           else pkgs.stdenv;
 
-        rustToolchainTOML = pkgs.rust-bin.fromRustupToolchainFile (src + /rust-toolchain.toml);
+        rustToolchainTOML = pkgs.rust-bin.fromRustupToolchainFile (
+          src + /rust-toolchain.toml
+        );
         rustWasmToolchainTOML = rustToolchainTOML.override {
           extensions = [];
           targets = ["wasm32-wasi"];
@@ -150,30 +144,23 @@
           };
         };
         plugins = {
-          inherit (defaultPlugins) tab-bar status-bar strider compact-bar session-manager;
+          inherit
+            (defaultPlugins)
+            tab-bar
+            status-bar
+            strider
+            compact-bar
+            session-manager
+            ;
         };
 
         apps = {
-          default =
-            flake-utils.lib.mkApp
-            {
-              drv = packages.default;
-            };
-          zellij-upstream =
-            flake-utils.lib.mkApp
-            {
-              drv = packages.zellij-upstream;
-            };
-          zellij-cross-upstream =
-            flake-utils.lib.mkApp
-            {
-              drv = packages.zellij-cross-upstream;
-            };
-          zellij-cross =
-            flake-utils.lib.mkApp
-            {
-              drv = packages.zellij-cross;
-            };
+          default = flake-utils.lib.mkApp {drv = packages.default;};
+          zellij-upstream = flake-utils.lib.mkApp {drv = packages.zellij-upstream;};
+          zellij-cross-upstream = flake-utils.lib.mkApp {
+            drv = packages.zellij-cross-upstream;
+          };
+          zellij-cross = flake-utils.lib.mkApp {drv = packages.zellij-cross;};
         };
 
         devShells = {
@@ -184,17 +171,26 @@
             # nativeBuildInputs ++ devInputs;
             RUST_BACKTRACE = 1;
           };
-          fmtShell = pkgs.mkShell {
-            buildInputs = fmtInputs;
-          };
-          actionlintShell = pkgs.mkShell {
-            buildInputs = [pkgs.actionlint];
-          };
+          fmtShell = pkgs.mkShell {buildInputs = fmtInputs;};
+          actionlintShell = pkgs.mkShell {buildInputs = [pkgs.actionlint];};
         };
 
         checks = {
-          inherit (self.outputs.packages.${system}) default zellij-upstream zellij-cross zellij-cross-upstream;
-          inherit (self.outputs.plugins.${system}) tab-bar status-bar strider compact-bar session-manager;
+          inherit
+            (self.outputs.packages.${system})
+            default
+            zellij-upstream
+            zellij-cross
+            zellij-cross-upstream
+            ;
+          inherit
+            (self.outputs.plugins.${system})
+            tab-bar
+            status-bar
+            strider
+            compact-bar
+            session-manager
+            ;
         };
         formatter = pkgs.alejandra;
       }
@@ -204,9 +200,7 @@
         default = final: _: {
           zellij = final.callPackage make-zellij {};
           zellij-upstream = final.callPackage make-zellij {patchPlugins = false;};
-          zellij-cross = final.callPackage make-zellij {
-            is_cross = true;
-          };
+          zellij-cross = final.callPackage make-zellij {is_cross = true;};
           zellij-cross-upstream = final.callPackage make-zellij {
             is_cross = false;
             patchPlugins = false;
@@ -214,10 +208,10 @@
         };
         nightly = final: _: {
           zellij-nightly = final.callPackage make-zellij {};
-          zellij-upstream-nightly = final.callPackage make-zellij {patchPlugins = false;};
-          zellij-cross = final.callPackage make-zellij {
-            is_cross = true;
+          zellij-upstream-nightly = final.callPackage make-zellij {
+            patchPlugins = false;
           };
+          zellij-cross = final.callPackage make-zellij {is_cross = true;};
           zellij-cross-upstream = final.callPackage make-zellij {
             is_cross = false;
             patchPlugins = false;
