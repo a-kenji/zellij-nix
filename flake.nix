@@ -142,10 +142,6 @@
         apps = {
           default = flake-utils.lib.mkApp {drv = packages.default;};
           zellij-upstream = flake-utils.lib.mkApp {drv = packages.zellij-upstream;};
-          zellij-cross-upstream = flake-utils.lib.mkApp {
-            drv = packages.zellij-cross-upstream;
-          };
-          zellij-cross = flake-utils.lib.mkApp {drv = packages.zellij-cross;};
         };
 
         devShells = {
