@@ -35,21 +35,20 @@
     };
     make-zellij = {
       makeRustPlatform,
-      rustPlatform,
-      cargo,
-      rustc,
       stdenv,
       pkg-config,
       protobuf,
       openssl,
+      rust-bin,
       patchPlugins ? true,
-      is_cross ? false,
-    }:
-      (
-        if is_cross
-        then rustPlatform
-        else (makeRustPlatform {inherit cargo rustc;})
-      )
+    }: let
+      rustToolchainTOML = rust-bin.fromRustupToolchainFile (
+        src + /rust-toolchain.toml
+      );
+      rustc = rustToolchainTOML;
+      cargo = rustToolchainTOML;
+    in
+      (makeRustPlatform {inherit cargo rustc;})
       .buildRustPackage
       {
         inherit
@@ -100,9 +99,6 @@
           targets = ["wasm32-wasi"];
         };
 
-        rustc = rustToolchainTOML;
-        cargo = rustToolchainTOML;
-
         devInputs = [
           rustToolchainTOML
           pkgs.binaryen
@@ -125,21 +121,10 @@
         packages = rec {
           # The default build compiles the plugins from src
           default = zellij;
-          zellij = pkgs.callPackage make-zellij {inherit stdenv rustc cargo;};
+          zellij = pkgs.callPackage make-zellij {inherit stdenv;};
           # The upstream build relies on precompiled binary plugins that are included in the upstream src
           zellij-upstream = pkgs.callPackage make-zellij {
-            inherit stdenv rustc cargo;
-            patchPlugins = false;
-          };
-          # The cross build doesn't use an overlay to always pull in the exact version of rust
-          # that upstream is using
-          zellij-cross = pkgs.callPackage make-zellij {
-            inherit stdenv rustc cargo;
-            is_cross = true;
-          };
-          zellij-cross-upstream = pkgs.callPackage make-zellij {
-            inherit stdenv rustc cargo;
-            is_cross = false;
+            inherit stdenv;
             patchPlugins = false;
           };
         };
@@ -166,9 +151,7 @@
         devShells = {
           default = pkgs.mkShell {
             inherit name;
-            # buildInputs;
             nativeBuildInputs = devInputs;
-            # nativeBuildInputs ++ devInputs;
             RUST_BACKTRACE = 1;
           };
           fmtShell = pkgs.mkShell {buildInputs = fmtInputs;};
@@ -180,8 +163,6 @@
             (self.outputs.packages.${system})
             default
             zellij-upstream
-            zellij-cross
-            zellij-cross-upstream
             ;
           inherit
             (self.outputs.plugins.${system})
@@ -200,20 +181,10 @@
         default = final: _: {
           zellij = final.callPackage make-zellij {};
           zellij-upstream = final.callPackage make-zellij {patchPlugins = false;};
-          zellij-cross = final.callPackage make-zellij {is_cross = true;};
-          zellij-cross-upstream = final.callPackage make-zellij {
-            is_cross = false;
-            patchPlugins = false;
-          };
         };
         nightly = final: _: {
           zellij-nightly = final.callPackage make-zellij {};
           zellij-upstream-nightly = final.callPackage make-zellij {
-            patchPlugins = false;
-          };
-          zellij-cross = final.callPackage make-zellij {is_cross = true;};
-          zellij-cross-upstream = final.callPackage make-zellij {
-            is_cross = false;
             patchPlugins = false;
           };
         };
