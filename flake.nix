@@ -39,6 +39,7 @@
       pkg-config,
       protobuf,
       openssl,
+      perl,
       rust-bin,
       patchPlugins ? true,
     }: let
@@ -61,6 +62,7 @@
         nativeBuildInputs = [
           pkg-config
           protobuf
+          perl
         ];
 
         buildInputs = [
