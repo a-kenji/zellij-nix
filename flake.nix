@@ -86,7 +86,7 @@
       system: let
         overlays = [(import rust-overlay)];
 
-        pkgs = import nixpkgs {inherit system overlays;};
+        pkgs = import nixpkgs {inherit system overlays; crossOverlays = overlays;};
 
         stdenv =
           if pkgs.stdenv.isLinux
@@ -100,6 +100,8 @@
           extensions = [];
           targets = ["wasm32-wasi"];
         };
+
+        inherit (pkgs) rust-bin;
 
         devInputs = [
           rustToolchainTOML
@@ -123,10 +125,10 @@
         packages = rec {
           # The default build compiles the plugins from src
           default = zellij;
-          zellij = pkgs.callPackage make-zellij {inherit stdenv;};
+          zellij = pkgs.callPackage make-zellij {inherit stdenv rust-bin;};
           # The upstream build relies on precompiled binary plugins that are included in the upstream src
           zellij-upstream = pkgs.callPackage make-zellij {
-            inherit stdenv;
+            inherit stdenv rust-bin;
             patchPlugins = false;
           };
         };
@@ -172,6 +174,11 @@
             ;
         };
         formatter = pkgs.alejandra;
+         legacyPackages = import nixpkgs {
+          inherit system;
+          overlays = [self.overlays.nightly];
+          crossOverlays = [self.overlays.nightly];
+        };
       }
     )
     // {
@@ -181,7 +188,7 @@
           zellij-upstream = final.callPackage make-zellij {patchPlugins = false;};
         };
         nightly = final: _: {
-          zellij-nightly = final.callPackage make-zellij {};
+          zellij-nightly = self.outputs.packages.${final.system}.zellij;
           zellij-upstream-nightly = final.callPackage make-zellij {
             patchPlugins = false;
           };
