@@ -187,8 +187,8 @@
           zellij = final.callPackage make-zellij {};
           zellij-upstream = final.callPackage make-zellij {patchPlugins = false;};
         };
-        nightly = final: _: {
-          zellij-nightly = self.outputs.packages.${final.system}.zellij;
+        nightly = final: prev: {
+          zellij-nightly = self.outputs.packages.${prev.system}.zellij;
           zellij-upstream-nightly = final.callPackage make-zellij {
             patchPlugins = false;
           };
