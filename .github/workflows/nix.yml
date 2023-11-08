@@ -72,7 +72,6 @@ jobs:
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
     - uses: DeterminateSystems/magic-nix-cache-action@v2
       with:
         diagnostic-endpoint: ""
@@ -92,7 +91,6 @@ jobs:
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
     - uses: DeterminateSystems/magic-nix-cache-action@v2
       with:
         diagnostic-endpoint: ""
