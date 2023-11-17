@@ -49,9 +49,7 @@
       rustc = rustToolchainTOML;
       cargo = rustToolchainTOML;
     in
-      (makeRustPlatform {inherit cargo rustc;})
-      .buildRustPackage
-      {
+      (makeRustPlatform {inherit cargo rustc;}).buildRustPackage {
         inherit
           cargoLock
           name
@@ -157,11 +155,7 @@
         };
 
         checks = {
-          inherit
-            (self.outputs.packages.${system})
-            default
-            zellij-upstream
-            ;
+          inherit (self.outputs.packages.${system}) default zellij-upstream;
           inherit
             (self.outputs.plugins.${system})
             tab-bar
@@ -176,16 +170,22 @@
     )
     // {
       overlays = {
-        default = final: _: {
-          zellij = final.callPackage make-zellij {};
-          zellij-upstream = final.callPackage make-zellij {patchPlugins = false;};
-        };
-        nightly = final: _: {
-          zellij-nightly = final.callPackage make-zellij {};
-          zellij-upstream-nightly = final.callPackage make-zellij {
-            patchPlugins = false;
-          };
-        };
+        default = nixpkgs.lib.composeManyExtensions [
+          (import rust-overlay)
+          (final: _: {
+            zellij = final.callPackage make-zellij {};
+            zellij-upstream = final.callPackage make-zellij {patchPlugins = false;};
+          })
+        ];
+        nightly = nixpkgs.lib.composeManyExtensions [
+          (import rust-overlay)
+          (final: _: {
+            zellij-nightly = final.callPackage make-zellij {};
+            zellij-upstream-nightly = final.callPackage make-zellij {
+              patchPlugins = false;
+            };
+          })
+        ];
       };
     };
 }
