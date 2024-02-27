@@ -6,6 +6,11 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
 
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
 
@@ -15,90 +20,98 @@
     zellij.flake = false;
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    zellij,
-    rust-overlay,
-    flake-utils,
-    ...
-  }: let
-    src = zellij;
-    cargoTOML = builtins.fromTOML (builtins.readFile (src + "/Cargo.toml"));
-    inherit (cargoTOML.package) version name;
-    cargoLock = {
-      lockFile = builtins.path {
-        path = src + "/Cargo.lock";
-        name = "Cargo.lock";
+  outputs =
+    {
+      self,
+      nixpkgs,
+      zellij,
+      rust-overlay,
+      flake-utils,
+      fenix,
+      ...
+    }:
+    let
+      src = zellij;
+      cargoTOML = builtins.fromTOML (builtins.readFile (src + "/Cargo.toml"));
+      inherit (cargoTOML.package) version name;
+      cargoLock = {
+        lockFile = builtins.path {
+          path = src + "/Cargo.lock";
+          name = "Cargo.lock";
+        };
+        allowBuiltinFetchGit = true;
       };
-      allowBuiltinFetchGit = true;
-    };
-    make-zellij = {
-      makeRustPlatform,
-      stdenv,
-      pkg-config,
-      protobuf,
-      openssl,
-      perl,
-      rust-bin,
-      patchPlugins ? true,
-    }: let
-      rustToolchainTOML = rust-bin.fromRustupToolchainFile (
-        src + /rust-toolchain.toml
-      );
-      rustc = rustToolchainTOML;
-      cargo = rustToolchainTOML;
-    in
-      (makeRustPlatform {inherit cargo rustc;})
-      .buildRustPackage
-      {
-        inherit
-          cargoLock
-          name
-          src
-          stdenv
-          version
+      make-zellij =
+        {
+          # makeRustPlatform,
+          rustPlatform,
+          stdenv,
+          pkg-config,
+          protobuf,
+          openssl,
+          perl,
+          rust-bin,
+          patchPlugins ? true,
+        }:
+        let
+        in
+        # rustToolchainTOML = rust-bin.fromRustupToolchainFile (
+        #   src + /rust-toolchain.toml
+        # );
+        # rustc = rustToolchainTOML;
+        # cargo = rustToolchainTOML;
+        # (makeRustPlatform {inherit cargo rustc;}).buildRustPackage {
+        rustPlatform.buildRustPackage {
+          inherit
+            cargoLock
+            name
+            src
+            stdenv
+            version
           ;
-        nativeBuildInputs = [
-          pkg-config
-          protobuf
-          perl
-        ];
+          nativeBuildInputs = [
+            pkg-config
+            protobuf
+            perl
+          ];
 
-        buildInputs = [
-          openssl
-          protobuf
-        ];
-        patchPhase =
-          if patchPlugins
-          then ''
-            cp ${self.outputs.plugins.x86_64-linux.tab-bar}/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
-            cp ${self.outputs.plugins.x86_64-linux.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
-            cp ${self.outputs.plugins.x86_64-linux.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
-            cp ${self.outputs.plugins.x86_64-linux.compact-bar}/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
-            cp ${self.outputs.plugins.x86_64-linux.session-manager}/bin/session-manager.wasm zellij-utils/assets/plugins/session-manager.wasm
-          ''
-          else ":";
-      };
-  in
+          buildInputs = [
+            openssl
+            protobuf
+          ];
+          patchPhase =
+            if patchPlugins then
+              ''
+                cp ${self.outputs.plugins.x86_64-linux.tab-bar}/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
+                cp ${self.outputs.plugins.x86_64-linux.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
+                cp ${self.outputs.plugins.x86_64-linux.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
+                cp ${self.outputs.plugins.x86_64-linux.compact-bar}/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
+                cp ${self.outputs.plugins.x86_64-linux.session-manager}/bin/session-manager.wasm zellij-utils/assets/plugins/session-manager.wasm
+              ''
+            else
+              ":";
+        };
+    in
     # flake outputs
     flake-utils.lib.eachDefaultSystem (
-      system: let
-        overlays = [(import rust-overlay)];
+      system:
+      let
+        overlays = [ (import rust-overlay) ];
 
-        pkgs = import nixpkgs {inherit system overlays;};
+        pkgs = import nixpkgs { inherit system overlays; };
 
         stdenv =
-          if pkgs.stdenv.isLinux
-          then pkgs.stdenvAdapters.useMoldLinker pkgs.stdenv
-          else pkgs.stdenv;
+          if pkgs.stdenv.isLinux then
+            pkgs.stdenvAdapters.useMoldLinker pkgs.stdenv
+          else
+            pkgs.stdenv;
 
         rustToolchainTOML = pkgs.rust-bin.fromRustupToolchainFile (
           src + /rust-toolchain.toml
         );
         rustWasmToolchainTOML = rustToolchainTOML.override {
-          extensions = [];
-          targets = ["wasm32-wasi"];
+          extensions = [ ];
+          targets = [ "wasm32-wasi" ];
         };
 
         devInputs = [
@@ -119,11 +132,12 @@
           rustc = rustWasmToolchainTOML;
           cargo = rustWasmToolchainTOML;
         };
-      in rec {
+      in
+      rec {
         packages = rec {
           # The default build compiles the plugins from src
           default = zellij;
-          zellij = pkgs.callPackage make-zellij {inherit stdenv;};
+          zellij = pkgs.callPackage make-zellij { inherit stdenv; };
           # The upstream build relies on precompiled binary plugins that are included in the upstream src
           zellij-upstream = pkgs.callPackage make-zellij {
             inherit stdenv;
@@ -131,19 +145,18 @@
           };
         };
         plugins = {
-          inherit
-            (defaultPlugins)
+          inherit (defaultPlugins)
             tab-bar
             status-bar
             strider
             compact-bar
             session-manager
-            ;
+          ;
         };
 
         apps = {
-          default = flake-utils.lib.mkApp {drv = packages.default;};
-          zellij-upstream = flake-utils.lib.mkApp {drv = packages.zellij-upstream;};
+          default = flake-utils.lib.mkApp { drv = packages.default; };
+          zellij-upstream = flake-utils.lib.mkApp { drv = packages.zellij-upstream; };
         };
 
         devShells = {
@@ -152,40 +165,46 @@
             nativeBuildInputs = devInputs;
             RUST_BACKTRACE = 1;
           };
-          fmtShell = pkgs.mkShell {buildInputs = fmtInputs;};
-          actionlintShell = pkgs.mkShell {buildInputs = [pkgs.actionlint];};
+          fmtShell = pkgs.mkShell { buildInputs = fmtInputs; };
+          actionlintShell = pkgs.mkShell { buildInputs = [ pkgs.actionlint ]; };
         };
 
         checks = {
-          inherit
-            (self.outputs.packages.${system})
-            default
-            zellij-upstream
-            ;
-          inherit
-            (self.outputs.plugins.${system})
+          inherit (self.outputs.packages.${system}) default zellij-upstream;
+          inherit (self.outputs.plugins.${system})
             tab-bar
             status-bar
             strider
             compact-bar
             session-manager
-            ;
+          ;
         };
         formatter = pkgs.alejandra;
+        legacyPackages = import nixpkgs {
+          inherit system;
+          overlays = [ self.overlays.nightly ];
+          # crossOverlays = [self.overlays.nightly];
+        };
       }
     )
     // {
       overlays = {
-        default = final: _: {
-          zellij = final.callPackage make-zellij {};
-          zellij-upstream = final.callPackage make-zellij {patchPlugins = false;};
-        };
-        nightly = final: _: {
-          zellij-nightly = final.callPackage make-zellij {};
-          zellij-upstream-nightly = final.callPackage make-zellij {
-            patchPlugins = false;
-          };
-        };
+        default = nixpkgs.lib.composeManyExtensions [
+          (import rust-overlay)
+          (final: _: {
+            zellij = final.callPackage make-zellij { };
+            zellij-upstream = final.callPackage make-zellij { patchPlugins = false; };
+          })
+        ];
+        nightly = nixpkgs.lib.composeManyExtensions [
+          (import rust-overlay)
+          (final: _: {
+            zellij-nightly = final.callPackage make-zellij { };
+            zellij-upstream-nightly = final.callPackage make-zellij {
+              patchPlugins = false;
+            };
+          })
+        ];
       };
     };
 }
