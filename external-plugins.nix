@@ -9,7 +9,7 @@
   binaryen,
   optimize ? true,
 }: let
-  makeDefaultPlugin = name:
+  makePlugin = name:
     (pkgs.makeRustPlatform {inherit cargo rustc;}).buildRustPackage {
       inherit
         cargoLock
@@ -32,6 +32,9 @@
           -Oz target/wasm32-wasi/release/${name}.wasm \
           -o $out/bin/${name}.wasm \
           --enable-bulk-memory
+          substituteInPlace dev.kdl --replace 'file:target/wasm32-wasi/debug/multitask.wasm' "${placeholder "out"}"
+          mkdir -p $out/share;
+          cp  dev.kdl $out/share/multitask.kdl
         ''
         else ''
           mv \
@@ -41,9 +44,5 @@
       doCheck = false;
     };
 in {
-  compact-bar = makeDefaultPlugin "compact-bar";
-  session-manager = makeDefaultPlugin "session-manager";
-  status-bar = makeDefaultPlugin "status-bar";
-  strider = makeDefaultPlugin "strider";
-  tab-bar = makeDefaultPlugin "tab-bar";
+  multitask = makePlugin "multitask";
 }
