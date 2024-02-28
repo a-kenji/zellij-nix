@@ -2,6 +2,8 @@
   description = "Zellij Nix Environment";
 
   inputs = {
+    multitask.url = "github:imsnif/multitask";
+    multitask.flake = false;
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
@@ -19,6 +21,7 @@
     self,
     nixpkgs,
     zellij,
+    multitask,
     rust-overlay,
     flake-utils,
     ...
@@ -49,9 +52,7 @@
       rustc = rustToolchainTOML;
       cargo = rustToolchainTOML;
     in
-      (makeRustPlatform {inherit cargo rustc;})
-      .buildRustPackage
-      {
+      (makeRustPlatform {inherit cargo rustc;}).buildRustPackage {
         inherit
           cargoLock
           name
@@ -119,6 +120,18 @@
           rustc = rustWasmToolchainTOML;
           cargo = rustWasmToolchainTOML;
         };
+        externalPlugins = pkgs.callPackage ./external-plugins.nix rec {
+          src = multitask;
+          cargoLock = {
+            lockFile = builtins.path {
+              path = src + "/Cargo.lock";
+              name = "Cargo.lock";
+            };
+            allowBuiltinFetchGit = true;
+          };
+          rustc = rustWasmToolchainTOML;
+          cargo = rustWasmToolchainTOML;
+        };
       in rec {
         packages = rec {
           # The default build compiles the plugins from src
@@ -139,6 +152,7 @@
             compact-bar
             session-manager
             ;
+          inherit (externalPlugins) multitask;
         };
 
         apps = {
@@ -157,11 +171,7 @@
         };
 
         checks = {
-          inherit
-            (self.outputs.packages.${system})
-            default
-            zellij-upstream
-            ;
+          inherit (self.outputs.packages.${system}) default zellij-upstream;
           inherit
             (self.outputs.plugins.${system})
             tab-bar
@@ -169,6 +179,7 @@
             strider
             compact-bar
             session-manager
+            multitask
             ;
         };
         formatter = pkgs.alejandra;
