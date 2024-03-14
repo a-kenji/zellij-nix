@@ -38,6 +38,7 @@
     };
     make-zellij = {
       makeRustPlatform,
+      lib,
       stdenv,
       pkg-config,
       protobuf,
@@ -80,6 +81,12 @@
             cp ${self.outputs.plugins.x86_64-linux.session-manager}/bin/session-manager.wasm zellij-utils/assets/plugins/session-manager.wasm
           ''
           else ":";
+        meta = {
+          description = "A terminal workspace with batteries included";
+          homepage = "https://zellij.dev/";
+          license = [lib.licenses.mit];
+          mainProgram = "zellij";
+        };
       };
   in
     # flake outputs
