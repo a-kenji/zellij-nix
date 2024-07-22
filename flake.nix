@@ -190,6 +190,11 @@
             ;
         };
         formatter = pkgs.alejandra;
+        legacyPackages = import nixpkgs {
+          inherit system;
+          overlays = [self.overlays.nightly];
+          crossOverlays = [self.overlays.nightly];
+        };
       }
     )
     // {
