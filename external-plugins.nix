@@ -8,9 +8,11 @@
   stdenv,
   binaryen,
   optimize ? true,
-}: let
-  makePlugin = name:
-    (pkgs.makeRustPlatform {inherit cargo rustc;}).buildRustPackage {
+}:
+let
+  makePlugin =
+    name:
+    (pkgs.makeRustPlatform { inherit cargo rustc; }).buildRustPackage {
       inherit
         cargoLock
         name
@@ -26,23 +28,25 @@
         mkdir -p $out/bin;
       '';
       installPhase =
-        if optimize
-        then ''
-          wasm-opt \
-          -Oz target/wasm32-wasi/release/${name}.wasm \
-          -o $out/bin/${name}.wasm \
-          --enable-bulk-memory
-          substituteInPlace dev.kdl --replace 'file:target/wasm32-wasi/debug/multitask.wasm' "${placeholder "out"}"
-          mkdir -p $out/share;
-          cp  dev.kdl $out/share/multitask.kdl
-        ''
-        else ''
-          mv \
-          target/wasm32-wasi/release/${name}.wasm \
-          $out/bin/${name}.wasm
-        '';
+        if optimize then
+          ''
+            wasm-opt \
+            -Oz target/wasm32-wasi/release/${name}.wasm \
+            -o $out/bin/${name}.wasm \
+            --enable-bulk-memory
+            substituteInPlace dev.kdl --replace 'file:target/wasm32-wasi/debug/multitask.wasm' "${placeholder "out"}"
+            mkdir -p $out/share;
+            cp  dev.kdl $out/share/multitask.kdl
+          ''
+        else
+          ''
+            mv \
+            target/wasm32-wasi/release/${name}.wasm \
+            $out/bin/${name}.wasm
+          '';
       doCheck = false;
     };
-in {
+in
+{
   multitask = makePlugin "multitask";
 }
