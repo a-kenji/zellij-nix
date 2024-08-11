@@ -69,13 +69,15 @@
           perl
         ];
 
-        buildInputs = [
-          openssl
-          protobuf
-        ] ++ lib.optionals stdenv.isDarwin (with pkgs.darwin.apple_sdk.frameworks; [
-          DiskArbitration
-          Foundation
-        ]);
+        buildInputs =
+          [
+            openssl
+            protobuf
+          ]
+          ++ lib.optionals stdenv.isDarwin (with pkgs.darwin.apple_sdk.frameworks; [
+            DiskArbitration
+            Foundation
+          ]);
 
         patchPhase =
           if patchPlugins
