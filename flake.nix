@@ -104,11 +104,6 @@
 
         pkgs = import nixpkgs {inherit system overlays;};
 
-        stdenv =
-          if pkgs.stdenv.isLinux
-          then pkgs.stdenvAdapters.useMoldLinker pkgs.stdenv
-          else pkgs.stdenv;
-
         rustToolchainTOML = pkgs.rust-bin.fromRustupToolchainFile (
           src + /rust-toolchain.toml
         );
@@ -152,10 +147,10 @@
         packages = rec {
           # The default build compiles the plugins from src
           default = zellij;
-          zellij = pkgs.callPackage make-zellij {inherit stdenv system pkgs;};
+          zellij = pkgs.callPackage make-zellij {inherit system pkgs;};
           # The upstream build relies on precompiled binary plugins that are included in the upstream src
           zellij-upstream = pkgs.callPackage make-zellij {
-            inherit stdenv system pkgs;
+            inherit system pkgs;
             patchPlugins = false;
           };
         };
