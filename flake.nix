@@ -17,98 +17,113 @@
     zellij.flake = false;
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    zellij,
-    multitask,
-    rust-overlay,
-    flake-utils,
-    ...
-  }: let
-    src = zellij;
-    cargoTOML = builtins.fromTOML (builtins.readFile (src + "/Cargo.toml"));
-    inherit (cargoTOML.package) version name;
-    cargoLock = {
-      lockFile = builtins.path {
-        path = src + "/Cargo.lock";
-        name = "Cargo.lock";
-      };
-      allowBuiltinFetchGit = true;
-    };
-    make-zellij = {
-      makeRustPlatform,
-      lib,
-      stdenv,
-      pkg-config,
-      protobuf,
-      openssl,
-      perl,
-      rust-bin,
-      darwin,
-      patchPlugins ? true,
-    }: let
-      rustToolchainTOML = rust-bin.fromRustupToolchainFile (
-        src + /rust-toolchain.toml
-      );
-      rustc = rustToolchainTOML;
-      cargo = rustToolchainTOML;
-    in
-      (makeRustPlatform {inherit cargo rustc;}).buildRustPackage {
-        inherit
-          cargoLock
-          name
-          src
-          stdenv
-          version
-          ;
-        nativeBuildInputs = [
-          pkg-config
-          protobuf
-          perl
-        ];
-
-        buildInputs =
-          [
-            openssl
-            protobuf
-          ]
-          ++ lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
-            DiskArbitration
-            Foundation
-          ]);
-
-        patchPhase =
-          if patchPlugins
-          then ''
-            cp ${self.outputs.plugins.${stdenv.system}.tab-bar}/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
-            cp ${self.outputs.plugins.${stdenv.system}.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
-            cp ${self.outputs.plugins.${stdenv.system}.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
-            cp ${self.outputs.plugins.${stdenv.system}.compact-bar}/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
-            cp ${self.outputs.plugins.${stdenv.system}.session-manager}/bin/session-manager.wasm zellij-utils/assets/plugins/session-manager.wasm
-          ''
-          else ":";
-        meta = {
-          description = "A terminal workspace with batteries included";
-          homepage = "https://zellij.dev/";
-          license = [lib.licenses.mit];
-          mainProgram = "zellij";
+  outputs =
+    {
+      self,
+      nixpkgs,
+      zellij,
+      multitask,
+      rust-overlay,
+      flake-utils,
+      ...
+    }:
+    let
+      src = zellij;
+      cargoTOML = builtins.fromTOML (builtins.readFile (src + "/Cargo.toml"));
+      inherit (cargoTOML.package) version name;
+      cargoLock = {
+        lockFile = builtins.path {
+          path = src + "/Cargo.lock";
+          name = "Cargo.lock";
         };
+        allowBuiltinFetchGit = true;
       };
-  in
+      make-zellij =
+        {
+          makeRustPlatform,
+          lib,
+          stdenv,
+          pkg-config,
+          protobuf,
+          openssl,
+          perl,
+          rust-bin,
+          darwin,
+          patchPlugins ? true,
+        }:
+        let
+          rustToolchainTOML = rust-bin.fromRustupToolchainFile (src + /rust-toolchain.toml);
+          rustc = rustToolchainTOML;
+          cargo = rustToolchainTOML;
+        in
+        (makeRustPlatform { inherit cargo rustc; }).buildRustPackage {
+          inherit
+            cargoLock
+            name
+            src
+            stdenv
+            version
+            ;
+          nativeBuildInputs = [
+            pkg-config
+            protobuf
+            perl
+          ];
+
+          buildInputs =
+            [
+              openssl
+              protobuf
+            ]
+            ++ lib.optionals stdenv.isDarwin (
+              with darwin.apple_sdk.frameworks;
+              [
+                DiskArbitration
+                Foundation
+              ]
+            );
+
+          patchPhase =
+            if patchPlugins then
+              ''
+                cp ${
+                  self.outputs.plugins.${stdenv.system}.tab-bar
+                }/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
+                cp ${
+                  self.outputs.plugins.${stdenv.system}.status-bar
+                }/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
+                cp ${
+                  self.outputs.plugins.${stdenv.system}.strider
+                }/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
+                cp ${
+                  self.outputs.plugins.${stdenv.system}.compact-bar
+                }/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
+                cp ${
+                  self.outputs.plugins.${stdenv.system}.session-manager
+                }/bin/session-manager.wasm zellij-utils/assets/plugins/session-manager.wasm
+              ''
+            else
+              ":";
+          meta = {
+            description = "A terminal workspace with batteries included";
+            homepage = "https://zellij.dev/";
+            license = [ lib.licenses.mit ];
+            mainProgram = "zellij";
+          };
+        };
+    in
     # flake outputs
     flake-utils.lib.eachDefaultSystem (
-      system: let
-        overlays = [(import rust-overlay)];
+      system:
+      let
+        overlays = [ (import rust-overlay) ];
 
-        pkgs = import nixpkgs {inherit system overlays;};
+        pkgs = import nixpkgs { inherit system overlays; };
 
-        rustToolchainTOML = pkgs.rust-bin.fromRustupToolchainFile (
-          src + /rust-toolchain.toml
-        );
+        rustToolchainTOML = pkgs.rust-bin.fromRustupToolchainFile (src + /rust-toolchain.toml);
         rustWasmToolchainTOML = rustToolchainTOML.override {
-          extensions = [];
-          targets = ["wasm32-wasi"];
+          extensions = [ ];
+          targets = [ "wasm32-wasi" ];
         };
 
         devInputs = [
@@ -120,7 +135,7 @@
         ];
 
         fmtInputs = [
-          pkgs.alejandra
+          pkgs.nixfmt-rfc-style
           pkgs.treefmt
         ];
 
@@ -142,19 +157,17 @@
           rustc = rustWasmToolchainTOML;
           cargo = rustWasmToolchainTOML;
         };
-      in rec {
+      in
+      rec {
         packages = rec {
           # The default build compiles the plugins from src
           default = zellij;
-          zellij = pkgs.callPackage make-zellij {};
+          zellij = pkgs.callPackage make-zellij { };
           # The upstream build relies on precompiled binary plugins that are included in the upstream src
-          zellij-upstream = pkgs.callPackage make-zellij {
-            patchPlugins = false;
-          };
+          zellij-upstream = pkgs.callPackage make-zellij { patchPlugins = false; };
         };
         plugins = {
-          inherit
-            (defaultPlugins)
+          inherit (defaultPlugins)
             tab-bar
             status-bar
             strider
@@ -165,8 +178,8 @@
         };
 
         apps = {
-          default = flake-utils.lib.mkApp {drv = packages.default;};
-          zellij-upstream = flake-utils.lib.mkApp {drv = packages.zellij-upstream;};
+          default = flake-utils.lib.mkApp { drv = packages.default; };
+          zellij-upstream = flake-utils.lib.mkApp { drv = packages.zellij-upstream; };
         };
 
         devShells = {
@@ -175,14 +188,13 @@
             nativeBuildInputs = devInputs;
             RUST_BACKTRACE = 1;
           };
-          fmtShell = pkgs.mkShell {buildInputs = fmtInputs;};
-          actionlintShell = pkgs.mkShell {buildInputs = [pkgs.actionlint];};
+          fmtShell = pkgs.mkShell { buildInputs = fmtInputs; };
+          actionlintShell = pkgs.mkShell { buildInputs = [ pkgs.actionlint ]; };
         };
 
         checks = {
           inherit (self.outputs.packages.${system}) default zellij-upstream;
-          inherit
-            (self.outputs.plugins.${system})
+          inherit (self.outputs.plugins.${system})
             tab-bar
             status-bar
             strider
@@ -191,20 +203,18 @@
             multitask
             ;
         };
-        formatter = pkgs.alejandra;
+        formatter = pkgs.nixfmt-rfc-style;
       }
     )
     // {
       overlays = {
         default = final: _: {
-          zellij = final.callPackage make-zellij {};
-          zellij-upstream = final.callPackage make-zellij {patchPlugins = false;};
+          zellij = final.callPackage make-zellij { };
+          zellij-upstream = final.callPackage make-zellij { patchPlugins = false; };
         };
         nightly = final: _: {
-          zellij-nightly = final.callPackage make-zellij {};
-          zellij-upstream-nightly = final.callPackage make-zellij {
-            patchPlugins = false;
-          };
+          zellij-nightly = final.callPackage make-zellij { };
+          zellij-upstream-nightly = final.callPackage make-zellij { patchPlugins = false; };
         };
       };
     };
