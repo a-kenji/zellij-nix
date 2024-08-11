@@ -45,6 +45,7 @@
       openssl,
       perl,
       rust-bin,
+      darwin,
       system,
       pkgs,
       patchPlugins ? true,
@@ -74,7 +75,7 @@
             openssl
             protobuf
           ]
-          ++ lib.optionals stdenv.isDarwin (with pkgs.darwin.apple_sdk.frameworks; [
+          ++ lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
             DiskArbitration
             Foundation
           ]);
@@ -147,10 +148,10 @@
         packages = rec {
           # The default build compiles the plugins from src
           default = zellij;
-          zellij = pkgs.callPackage make-zellij {inherit system pkgs;};
+          zellij = pkgs.callPackage make-zellij {inherit system;};
           # The upstream build relies on precompiled binary plugins that are included in the upstream src
           zellij-upstream = pkgs.callPackage make-zellij {
-            inherit system pkgs;
+            inherit system;
             patchPlugins = false;
           };
         };
