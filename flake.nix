@@ -45,6 +45,8 @@
       openssl,
       perl,
       rust-bin,
+      system,
+      pkgs,
       patchPlugins ? true,
     }: let
       rustToolchainTOML = rust-bin.fromRustupToolchainFile (
@@ -67,18 +69,24 @@
           perl
         ];
 
-        buildInputs = [
-          openssl
-          protobuf
-        ];
+        buildInputs =
+          [
+            openssl
+            protobuf
+          ]
+          ++ lib.optionals stdenv.isDarwin (with pkgs.darwin.apple_sdk.frameworks; [
+            DiskArbitration
+            Foundation
+          ]);
+
         patchPhase =
           if patchPlugins
           then ''
-            cp ${self.outputs.plugins.x86_64-linux.tab-bar}/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
-            cp ${self.outputs.plugins.x86_64-linux.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
-            cp ${self.outputs.plugins.x86_64-linux.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
-            cp ${self.outputs.plugins.x86_64-linux.compact-bar}/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
-            cp ${self.outputs.plugins.x86_64-linux.session-manager}/bin/session-manager.wasm zellij-utils/assets/plugins/session-manager.wasm
+            cp ${self.outputs.plugins.${system}.tab-bar}/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
+            cp ${self.outputs.plugins.${system}.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
+            cp ${self.outputs.plugins.${system}.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
+            cp ${self.outputs.plugins.${system}.compact-bar}/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
+            cp ${self.outputs.plugins.${system}.session-manager}/bin/session-manager.wasm zellij-utils/assets/plugins/session-manager.wasm
           ''
           else ":";
         meta = {
@@ -127,6 +135,7 @@
           rustc = rustWasmToolchainTOML;
           cargo = rustWasmToolchainTOML;
         };
+
         externalPlugins = pkgs.callPackage ./external-plugins.nix rec {
           src = multitask;
           cargoLock = {
@@ -143,10 +152,10 @@
         packages = rec {
           # The default build compiles the plugins from src
           default = zellij;
-          zellij = pkgs.callPackage make-zellij {inherit stdenv;};
+          zellij = pkgs.callPackage make-zellij {inherit stdenv system pkgs;};
           # The upstream build relies on precompiled binary plugins that are included in the upstream src
           zellij-upstream = pkgs.callPackage make-zellij {
-            inherit stdenv;
+            inherit stdenv system pkgs;
             patchPlugins = false;
           };
         };
