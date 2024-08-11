@@ -45,8 +45,7 @@
       openssl,
       perl,
       rust-bin,
-      system,
-      pkgs,
+      darwin,
       patchPlugins ? true,
     }: let
       rustToolchainTOML = rust-bin.fromRustupToolchainFile (
@@ -74,7 +73,7 @@
             openssl
             protobuf
           ]
-          ++ lib.optionals stdenv.isDarwin (with pkgs.darwin.apple_sdk.frameworks; [
+          ++ lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
             DiskArbitration
             Foundation
           ]);
@@ -82,11 +81,11 @@
         patchPhase =
           if patchPlugins
           then ''
-            cp ${self.outputs.plugins.${system}.tab-bar}/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
-            cp ${self.outputs.plugins.${system}.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
-            cp ${self.outputs.plugins.${system}.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
-            cp ${self.outputs.plugins.${system}.compact-bar}/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
-            cp ${self.outputs.plugins.${system}.session-manager}/bin/session-manager.wasm zellij-utils/assets/plugins/session-manager.wasm
+            cp ${self.outputs.plugins.${stdenv.system}.tab-bar}/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
+            cp ${self.outputs.plugins.${stdenv.system}.status-bar}/bin/status-bar.wasm zellij-utils/assets/plugins/status-bar.wasm
+            cp ${self.outputs.plugins.${stdenv.system}.strider}/bin/strider.wasm zellij-utils/assets/plugins/strider.wasm
+            cp ${self.outputs.plugins.${stdenv.system}.compact-bar}/bin/compact-bar.wasm zellij-utils/assets/plugins/compact-bar.wasm
+            cp ${self.outputs.plugins.${stdenv.system}.session-manager}/bin/session-manager.wasm zellij-utils/assets/plugins/session-manager.wasm
           ''
           else ":";
         meta = {
@@ -103,11 +102,6 @@
         overlays = [(import rust-overlay)];
 
         pkgs = import nixpkgs {inherit system overlays;};
-
-        stdenv =
-          if pkgs.stdenv.isLinux
-          then pkgs.stdenvAdapters.useMoldLinker pkgs.stdenv
-          else pkgs.stdenv;
 
         rustToolchainTOML = pkgs.rust-bin.fromRustupToolchainFile (
           src + /rust-toolchain.toml
@@ -152,10 +146,9 @@
         packages = rec {
           # The default build compiles the plugins from src
           default = zellij;
-          zellij = pkgs.callPackage make-zellij {inherit stdenv system pkgs;};
+          zellij = pkgs.callPackage make-zellij {};
           # The upstream build relies on precompiled binary plugins that are included in the upstream src
           zellij-upstream = pkgs.callPackage make-zellij {
-            inherit stdenv system pkgs;
             patchPlugins = false;
           };
         };
