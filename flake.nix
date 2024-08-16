@@ -87,6 +87,9 @@
             if patchPlugins then
               ''
                 cp ${
+                  self.outputs.plugins.${stdenv.system}.configuration
+                }/bin/configuration.wasm zellij-utils/assets/plugins/configuration.wasm
+                cp ${
                   self.outputs.plugins.${stdenv.system}.tab-bar
                 }/bin/tab-bar.wasm zellij-utils/assets/plugins/tab-bar.wasm
                 cp ${
@@ -168,11 +171,12 @@
         };
         plugins = {
           inherit (defaultPlugins)
-            tab-bar
+            compact-bar
+            configuration
+            session-manager
             status-bar
             strider
-            compact-bar
-            session-manager
+            tab-bar
             ;
           inherit (externalPlugins) multitask;
         };
@@ -195,11 +199,12 @@
         checks = {
           inherit (self.outputs.packages.${system}) default zellij-upstream;
           inherit (self.outputs.plugins.${system})
-            tab-bar
+            compact-bar
+            configuration
+            session-manager
             status-bar
             strider
-            compact-bar
-            session-manager
+            tab-bar
             multitask
             ;
         };

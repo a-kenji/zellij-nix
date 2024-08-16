@@ -46,6 +46,7 @@ let
 in
 {
   compact-bar = makeDefaultPlugin "compact-bar";
+  configuration = makeDefaultPlugin "configuration";
   session-manager = makeDefaultPlugin "session-manager";
   status-bar = makeDefaultPlugin "status-bar";
   strider = makeDefaultPlugin "strider";
