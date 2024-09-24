@@ -20,7 +20,7 @@ jobs:
         with:
           diagnostic-endpoint: ""
       - name: Update flake.lock zellij input
-        uses: DeterminateSystems/update-flake-lock@v23
+        uses: DeterminateSystems/update-flake-lock@v24
         with:
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
           inputs: zellij
