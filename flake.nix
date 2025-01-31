@@ -126,7 +126,7 @@
         rustToolchainTOML = pkgs.rust-bin.fromRustupToolchainFile (src + /rust-toolchain.toml);
         rustWasmToolchainTOML = rustToolchainTOML.override {
           extensions = [ ];
-          targets = [ "wasm32-wasi" ];
+          targets = [ "wasm32-wasip1" ];
         };
 
         devInputs = [

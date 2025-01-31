@@ -8,6 +8,7 @@
   stdenv,
   binaryen,
   optimize ? true,
+  wasmTarget ? "wasm32-wasip1",
 }:
 let
   makeDefaultPlugin =
@@ -24,21 +25,21 @@ let
         protobuf
       ];
       buildPhase = ''
-        cargo build --package ${name} --release --target=wasm32-wasi
+        cargo build --package ${name} --release --target=${wasmTarget}
         mkdir -p $out/bin;
       '';
       installPhase =
         if optimize then
           ''
             wasm-opt \
-            -Oz target/wasm32-wasi/release/${name}.wasm \
+            -Oz target/${wasmTarget}/release/${name}.wasm \
             -o $out/bin/${name}.wasm \
             --enable-bulk-memory
           ''
         else
           ''
             mv \
-            target/wasm32-wasi/release/${name}.wasm \
+            target/${wasmTarget}/release/${name}.wasm \
             $out/bin/${name}.wasm
           '';
       doCheck = false;
