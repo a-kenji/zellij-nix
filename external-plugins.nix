@@ -34,7 +34,8 @@ let
             wasm-opt \
             -Oz target/${wasmTarget}/release/${name}.wasm \
             -o $out/bin/${name}.wasm \
-            --enable-bulk-memory
+            --enable-bulk-memory \
+            --enable-nontrapping-float-to-int
             substituteInPlace dev.kdl --replace 'file:target/${wasmTarget}/debug/multitask.wasm' "${placeholder "out"}"
             mkdir -p $out/share;
             cp  dev.kdl $out/share/multitask.kdl

@@ -34,7 +34,8 @@ let
             wasm-opt \
             -Oz target/${wasmTarget}/release/${name}.wasm \
             -o $out/bin/${name}.wasm \
-            --enable-bulk-memory
+            --enable-bulk-memory \
+            --enable-nontrapping-float-to-int
           ''
         else
           ''
