@@ -29,6 +29,11 @@
     }:
     let
       src = zellij;
+      supportedSystems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ];
       cargoTOML = builtins.fromTOML (builtins.readFile (src + "/Cargo.toml"));
       version = cargoTOML.workspace.package.version;
       name = cargoTOML.package.name;
@@ -109,7 +114,7 @@
         };
     in
     # flake outputs
-    flake-utils.lib.eachDefaultSystem (
+    flake-utils.lib.eachSystem supportedSystems (
       system:
       let
         overlays = [ (import rust-overlay) ];
